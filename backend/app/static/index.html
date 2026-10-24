@@ -376,6 +376,59 @@ textarea:focus {
     .empty-state-fields span{padding:6px 9px;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:11px;white-space:nowrap}
     @media(max-width:760px){.empty-state{align-items:flex-start;flex-direction:column;gap:12px}.empty-state-fields{justify-content:flex-start}}
 
+
+    /* Balanced desktop viewport: center the workflow, not pin it to the top. */
+    html { min-height: 100%; }
+    body { min-height: 100vh; }
+    .shell {
+      width: min(100%, 1160px);
+      min-height: 100vh;
+      margin-inline: auto;
+      padding: 18px 28px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    header { flex: 0 0 auto; }
+    .hero-with-art {
+      padding: 26px 0 22px;
+      grid-template-columns: minmax(0, 1.25fr) minmax(220px, .75fr);
+      gap: 30px;
+    }
+    .hero-copy { max-width: 650px; }
+    h1 { font-size: clamp(40px, 5vw, 58px); margin: 9px 0 10px; }
+    .hero p { margin: 0; max-width: 610px; font-size: 15px; line-height: 1.5; }
+    .hero-art svg { width: min(100%, 270px); max-height: 220px; }
+    .source-grid { gap: 14px; }
+    .source-card, .card { padding: 15px; }
+    .source-card textarea, textarea { min-height: 125px; height: 125px; padding: 12px; }
+    .actions { margin: 12px 0 0; gap: 10px; }
+    .primary, .secondary { padding: 10px 15px; }
+    .empty-state { margin-top: 18px; padding-top: 13px; }
+    footer { margin-top: 18px; padding-top: 10px; }
+    #results { margin-top: 20px; }
+    @media (min-width: 761px) and (max-height: 780px) {
+      .shell { padding-top: 12px; padding-bottom: 12px; }
+      .hero-with-art { padding: 16px 0 14px; }
+      h1 { font-size: 42px; }
+      .hero-art svg { width: 190px; max-height: 155px; }
+      .source-card textarea, textarea { min-height: 95px; height: 95px; }
+      .empty-state { margin-top: 12px; padding-top: 10px; }
+      footer { margin-top: 12px; }
+    }
+    @media (max-width: 760px) {
+      .shell { min-height: 100svh; padding: 16px 16px 22px; justify-content: flex-start; }
+      .hero-with-art { padding: 28px 0 18px; grid-template-columns: 1fr; }
+      .hero-art { display: none; }
+      h1 { font-size: clamp(38px, 10vw, 48px); }
+      .source-grid { grid-template-columns: 1fr; }
+      .source-card textarea, textarea { height: 125px; min-height: 125px; }
+      .empty-state { margin-top: 18px; }
+      .actions { align-items: center; }
+      .status { flex-basis: 100%; }
+      footer { margin-top: 22px; }
+    }
+
   </style>
 </head>
 <body>
