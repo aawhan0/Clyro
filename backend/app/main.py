@@ -1,9 +1,10 @@
 """FastAPI entry point for Clyro's two-source comparison workflow."""
 
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import Field
 
 from app.comparison import compare_sources
@@ -83,3 +84,8 @@ def compare(request: CompareRequest) -> CompareResponse:
     source_b = extract_source(request.source_b)
     result = compare_sources(source_a, source_b)
     return CompareResponse(**result)
+
+@app.get("/", include_in_schema=False)
+def home() -> FileResponse:
+    """Serve the Clyro MVP interface."""
+    return FileResponse(Path(__file__).parent / "static" / "index.html")

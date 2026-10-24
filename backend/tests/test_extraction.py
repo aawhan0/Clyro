@@ -166,3 +166,47 @@ def test_extract_accepts_evidence_with_whitespace_variation(monkeypatch):
     assert result.fields.eligibility_requirements.value == (
         "Open to final-year students"
     )
+
+
+def test_parse_extraction_response_preserves_original_source_text():
+    from app.extraction import parse_extraction_response
+
+    original = (
+        "Applications close on 30 November 2026. "
+        "Remote participation. Apply through the official form."
+    )
+    response = """{
+        "fields": {
+            "application_deadline": {
+                "value": "30 November 2026",
+                "evidence": {
+                    "quote": "Applications close on 30 November 2026."
+                }
+            },
+            "eligibility_requirements": {
+                "value": null,
+                "evidence": null
+            },
+            "stipend_or_prize": {
+                "value": null,
+                "evidence": null
+            },
+            "location_or_participation_mode": {
+                "value": "Remote participation",
+                "evidence": {
+                    "quote": "Remote participation."
+                }
+            },
+            "application_method": {
+                "value": "official form",
+                "evidence": {
+                    "quote": "Apply through the official form."
+                }
+            }
+        }
+    }"""
+
+    result = parse_extraction_response(original, response)
+
+    assert result.source_text == original
+    assert "Remote participation." in result.source_text

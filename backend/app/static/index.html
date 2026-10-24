@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>Clyro ? Know before you apply</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10120f;
+      --panel: #191c18;
+      --border: #34392f;
+      --text: #f4f3e9;
+      --muted: #a8ad9e;
+      --lime: #d4f477;
+      --red: #ff9c91;
+      --yellow: #f4d887;
+      --green: #b9efb0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.6 Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    button, textarea { font: inherit; }
+    .shell { max-width: 1120px; margin: auto; padding: 28px 22px 70px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { font-weight: 850; font-size: 25px; letter-spacing: -1px; }
+    .brand span { color: var(--lime); }
+    .badge { border: 1px solid var(--border); padding: 5px 10px; border-radius: 999px; color: var(--muted); font-size: 12px; }
+    .hero { padding: 68px 0 34px; max-width: 760px; }
+    .eyebrow { color: var(--lime); text-transform: uppercase; font-size: 11px; font-weight: 800; letter-spacing: 2px; }
+    h1 { font-size: clamp(38px, 7vw, 68px); line-height: 1.03; letter-spacing: -3px; margin: 14px 0 18px; }
+    h1 span { color: var(--lime); }
+    .hero p { color: var(--muted); max-width: 650px; font-size: 17px; }
+    .source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 20px; min-width: 0; }
+    .card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+    h2, h3 { margin: 0; }
+    h2 { font-size: 16px; }
+    .hint { color: var(--muted); font-size: 12px; }
+    textarea {
+      width: 100%; min-height: 210px; resize: vertical; background: #11130f;
+      border: 1px solid var(--border); border-radius: 9px; padding: 14px;
+      color: var(--text); outline: none; line-height: 1.6;
+    }
+    textarea:focus { border-color: var(--lime); }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0 28px; }
+    .primary, .secondary { cursor: pointer; border-radius: 9px; padding: 12px 19px; font-weight: 800; }
+    .primary { background: var(--lime); color: #16190f; border: 0; }
+    .primary:disabled { opacity: .55; cursor: wait; }
+    .secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .status { color: var(--muted); font-size: 13px; }
+    #results { display: none; }
+    .results-top { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 16px; }
+    .results-top h2 { font-size: 25px; }
+    .results-top p { margin: 4px 0 0; color: var(--muted); }
+    .notice { border: 1px solid #4b503d; border-radius: 10px; padding: 12px 15px; color: var(--muted); margin-bottom: 16px; font-size: 13px; }
+    .findings { display: grid; gap: 12px; }
+    .finding { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px; }
+    .finding-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .finding h3 { font-size: 16px; text-transform: capitalize; }
+    .status-pill { border-radius: 999px; padding: 4px 9px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .match { color: var(--green); background: #203221; }
+    .conflict, .partial_mismatch { color: var(--yellow); background: #38301b; }
+    .not_found { color: var(--muted); background: #292c27; }
+    .claims { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .claim { border: 1px solid var(--border); border-radius: 9px; padding: 12px; min-width: 0; }
+    .claim-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+    .claim-value { margin: 5px 0 10px; overflow-wrap: anywhere; }
+    blockquote { margin: 0; border-left: 2px solid var(--lime); padding-left: 10px; color: #c7cbbc; font-size: 13px; overflow-wrap: anywhere; }
+    .next { margin-top: 13px; font-size: 13px; color: var(--muted); }
+    .error { color: var(--red); }
+    footer { margin-top: 45px; border-top: 1px solid var(--border); padding-top: 17px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 680px) {
+      .shell { padding: 20px 14px 45px; }
+      .hero { padding-top: 48px; }
+      h1 { letter-spacing: -2px; }
+      .source-grid, .claims { grid-template-columns: 1fr; }
+      textarea { min-height: 170px; }
+      .results-top { align-items: start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand">clyro<span>.</span></div>
+      <div class="badge">EARLY ACCESS ? MVP</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Opportunity clarity, not guesswork</div>
+      <h1>Know before<br>you <span>apply.</span></h1>
+      <p>Compare two announcements for the same opportunity. Spot conflicting deadlines, eligibility rules and missing details?with source evidence to help you decide what to verify.</p>
+    </section>
+
+    <section aria-label="Source inputs">
+      <div class="source-grid">
+        <article class="card">
+          <div class="card-head"><h2>Source A</h2><span class="hint">Announcement / post</span></div>
+          <textarea id="sourceA" maxlength="30000" placeholder="Paste the first announcement here..."></textarea>
+        </article>
+        <article class="card">
+          <div class="card-head"><h2>Source B</h2><span class="hint">Official page / other post</span></div>
+          <textarea id="sourceB" maxlength="30000" placeholder="Paste the second announcement here..."></textarea>
+        </article>
+      </div>
+      <div class="actions">
+        <button class="primary" id="compareBtn">Compare sources ?</button>
+        <button class="secondary" id="demoBtn">Load demo example</button>
+        <span class="status" id="status" role="status" aria-live="polite">Your sources are compared by field, not ranked.</span>
+      </div>
+    </section>
+
+    <section id="results" aria-live="polite">
+      <div class="results-top">
+        <div><div class="eyebrow">Comparison report</div><h2>What needs your attention?</h2><p id="summary"></p></div>
+      </div>
+      <div class="notice">Clyro reports differences in the supplied text. A conflict is a reason to verify?not proof of fraud or evidence that either source is correct.</div>
+      <div class="findings" id="findings"></div>
+    </section>
+
+    <footer>Clyro ? Know before you apply. Verify important details with the opportunity organizer before taking action.</footer>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    const labels = {
+      application_deadline: "Application deadline",
+      eligibility_requirements: "Eligibility & requirements",
+      stipend_or_prize: "Stipend or prize",
+      location_or_participation_mode: "Location & participation",
+      application_method: "Application method"
+    };
+    const demoA = "Applications close on November 10, 2026. Open to undergraduate students. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
+    const demoB = "Applications close on November 15, 2026. Open to undergraduate students in computer science or data science. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
+
+    $("demoBtn").addEventListener("click", () => {
+      $("sourceA").value = demoA;
+      $("sourceB").value = demoB;
+      $("status").textContent = "Illustrative demo text loaded. Run Compare to analyze it.";
+      $("results").style.display = "none";
+    });
+
+    function safeText(value) {
+      return value == null ? "Not stated in this source" : String(value);
+    }
+
+    function renderFindings(findings) {
+      const counts = { match: 0, conflict: 0, partial_mismatch: 0, not_found: 0 };
+      $("findings").replaceChildren();
+
+      for (const item of findings) {
+        counts[item.status] = (counts[item.status] || 0) + 1;
+        const article = document.createElement("article");
+        article.className = "finding";
+
+        const head = document.createElement("div");
+        head.className = "finding-head";
+        const title = document.createElement("h3");
+        title.textContent = labels[item.field] || item.field.replaceAll("_", " ");
+        const pill = document.createElement("span");
+        pill.className = "status-pill " + item.status;
+        pill.textContent = ({
+          match: "MATCH",
+          conflict: "CONFLICT ? VERIFY",
+          partial_mismatch: "SCOPE DIFFERS",
+          not_found: "MISSING INFORMATION"
+        })[item.status] || item.status.toUpperCase();
+        head.append(title, pill);
+        article.append(head);
+
+        const claims = document.createElement("div");
+        claims.className = "claims";
+
+        for (const [key, name] of [["source_a", "Source A"], ["source_b", "Source B"]]) {
+          const claim = item[key] || {};
+          const box = document.createElement("div");
+          box.className = "claim";
+          const label = document.createElement("div");
+          label.className = "claim-label";
+          label.textContent = name;
+          const value = document.createElement("div");
+          value.className = "claim-value";
+          value.textContent = safeText(claim.value);
+          box.append(label, value);
+
+          if (claim.evidence && claim.evidence.quote) {
+            const quoteLabel = document.createElement("div");
+            quoteLabel.className = "claim-label";
+            quoteLabel.textContent = "Evidence from source";
+            const quote = document.createElement("blockquote");
+            quote.textContent = "?" + claim.evidence.quote + "?";
+            box.append(quoteLabel, quote);
+          }
+          claims.append(box);
+        }
+        article.append(claims);
+
+        const next = document.createElement("p");
+        next.className = "next";
+        next.textContent = "Next step: " + (item.next_step || "Review the original sources.");
+        article.append(next);
+        $("findings").append(article);
+      }
+
+      $("summary").textContent =
+        `${counts.match} matches ? ${counts.conflict} conflicts ? ` +
+        `${counts.partial_mismatch} scope differences ? ${counts.not_found} missing`;
+      $("results").style.display = "block";
+      $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    $("compareBtn").addEventListener("click", async () => {
+      const source_a = $("sourceA").value.trim();
+      const source_b = $("sourceB").value.trim();
+
+      if (!source_a || !source_b) {
+        $("status").textContent = "Paste text into both source boxes first.";
+        $("status").className = "status error";
+        return;
+      }
+
+      const button = $("compareBtn");
+      button.disabled = true;
+      button.textContent = "Comparing?";
+      $("status").className = "status";
+      $("status").textContent = "Extracting and comparing both sources. This can take a little while.";
+      $("results").style.display = "none";
+
+      try {
+        const response = await fetch("/api/compare", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ source_a, source_b })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || data.detail || `Request failed (${response.status}).`);
+        }
+        if (!Array.isArray(data.findings)) {
+          throw new Error("The API returned an unexpected response.");
+        }
+
+        renderFindings(data.findings);
+        $("status").textContent = "Comparison complete. Review the evidence before acting.";
+      } catch (error) {
+        $("status").className = "status error";
+        $("status").textContent = error.message ||
+          "Could not complete the comparison. Check the backend and try again.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Compare sources ?";
+      }
+    });
+  </script>
+</body>
+</html>

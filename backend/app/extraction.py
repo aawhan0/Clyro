@@ -74,7 +74,6 @@ def _request_gemma(prompt: str, api_key: str, model: str) -> str:
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
             "temperature": 0,
-            "responseMimeType": "application/json",
         },
     }
     request = Request(
@@ -84,7 +83,7 @@ def _request_gemma(prompt: str, api_key: str, model: str) -> str:
         method="POST",
     )
     try:
-        with urlopen(request, timeout=30) as response:
+        with urlopen(request, timeout=90) as response:
             result = json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")[:500]
@@ -98,7 +97,12 @@ def _request_gemma(prompt: str, api_key: str, model: str) -> str:
 
     try:
         parts = result["candidates"][0]["content"]["parts"]
-        text_parts = [part["text"] for part in parts if isinstance(part.get("text"), str)]
+        text_parts = [
+            part["text"]
+            for part in parts
+            if isinstance(part.get("text"), str)
+            and not part.get("thought", False)
+        ]
         if not text_parts:
             raise KeyError("candidate text")
         return "\n".join(text_parts)
