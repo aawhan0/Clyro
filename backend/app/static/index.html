@@ -291,6 +291,11 @@ textarea:focus {
       .comparison-footnote { padding:13px 16px; }
     }
 
+  .result-overview{overflow:hidden;border:1px solid #34434a;border-radius:15px;background:linear-gradient(135deg,#1b2427,#171b1b)}
+.quick-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 22px 15px}.quick-kicker{font-size:10px;letter-spacing:1.5px;font-weight:800;color:#a9c5cc}.quick-head h3{margin:5px 0 0;font-size:19px}.quick-count{display:flex;align-items:baseline;gap:7px;white-space:nowrap}.quick-count strong{font-size:31px;color:var(--lime)}.quick-count span{font-size:12px;color:var(--muted)}
+.quick-issues{padding:0 22px}.quick-issue{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 0;border-top:1px solid #303b3e}.quick-issue strong{font-size:13px}.quick-issue p{margin:4px 0 0;color:#b9c3c2;font-size:12px;line-height:1.5;overflow-wrap:anywhere}.quick-status{flex-shrink:0;padding:4px 7px;border-radius:6px;font-size:9px;font-weight:800;white-space:nowrap;background:#38301b;color:var(--yellow)}.quick-status.not_found{background:#293237;color:#c4d0d1}.quick-clear{padding:0 22px 17px;margin:0;color:#c3d2c5;font-size:13px}.quick-foot{padding:11px 22px;border-top:1px solid #303b3e;color:#9eafb3;font-size:11px}
+.detailed-report{margin-top:12px;border:1px solid var(--border);border-radius:13px;overflow:hidden;background:#141612}.detailed-report>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 18px;cursor:pointer;list-style:none}.detailed-report>summary::-webkit-details-marker{display:none}.detailed-report>summary span:first-child{display:grid;gap:4px}.detailed-report>summary strong{font-size:13px}.detailed-report>summary small{font-size:11px;color:var(--muted)}.detail-plus{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--border);border-radius:8px;color:var(--lime);font-size:20px}.detailed-report[open]>summary{border-bottom:1px solid var(--border);background:#191c18}.detailed-report[open] .detail-plus{transform:rotate(45deg)}.detailed-report .comparison-card{border:0;border-radius:0;box-shadow:none}
+@media(max-width:680px){.quick-head{padding:16px}.quick-issues{padding:0 16px}.quick-issue{align-items:flex-start;flex-direction:column;gap:8px}.quick-clear{padding:0 16px 16px}.quick-foot{padding:10px 16px}.detailed-report>summary{padding:13px}}
   </style>
 </head>
 <body>
@@ -465,9 +470,26 @@ textarea:focus {
 
       const overview = document.createElement("div");
       overview.className = "result-overview";
-      overview.innerHTML = `
-        <div class="overview-count"><strong>${attentionItems.length}</strong><span>${attentionItems.length === 1 ? "detail to verify" : "details to verify"}</span></div>
-        <div class="overview-note">${counts.match} of ${findings.length} fields match</div>`;
+      overview.innerHTML = `<div class="quick-head"><div><span class="quick-kicker">QUICK TAKE</span><h3>${attentionItems.length ? "Check these details" : "Looks consistent so far"}</h3></div><div class="quick-count"><strong>${attentionItems.length}</strong><span>to verify</span></div></div>`;
+      if (attentionItems.length) {
+        const list = document.createElement("div"); list.className = "quick-issues";
+        for (const item of attentionItems) {
+          const row = document.createElement("div"); row.className = "quick-issue";
+          const text = document.createElement("div");
+          const title = document.createElement("strong"); title.textContent = labels[item.field] || item.field.replaceAll("_", " ");
+          const values = document.createElement("p"); values.textContent = `A: ${safeText(item.source_a?.value)} · B: ${safeText(item.source_b?.value)}`;
+          text.append(title, values);
+          const status = document.createElement("span"); status.className = "quick-status " + item.status;
+          status.textContent = ({ conflict: "CONFLICT", partial_mismatch: "SCOPE DIFFERS", not_found: "MISSING" })[item.status] || "VERIFY";
+          row.append(text, status); list.append(row);
+        }
+        overview.append(list);
+      } else {
+        const clear = document.createElement("p"); clear.className = "quick-clear";
+        clear.textContent = "The supplied announcements agree on the fields compared. Verify critical details with the organizer."; overview.append(clear);
+      }
+      const foot = document.createElement("div"); foot.className = "quick-foot";
+      foot.textContent = `${counts.match} of ${findings.length} fields match · Based only on the text provided`; overview.append(foot);
       $("findings").append(overview);
 
       const report = document.createElement("article");
@@ -566,7 +588,11 @@ textarea:focus {
       reportFoot.className = "comparison-footnote";
       reportFoot.textContent = "Differences are based only on the text provided. Verify critical details with the opportunity organizer.";
       report.append(reportFoot);
-      $("findings").append(report);
+      const detail = document.createElement("details"); detail.className = "detailed-report";
+      const detailSummary = document.createElement("summary");
+      detailSummary.innerHTML = `<span><strong>Open detailed report</strong><small>All ${findings.length} fields, evidence and recommended next steps</small></span><span class="detail-plus" aria-hidden="true">+</span>`;
+      detail.append(detailSummary, report);
+      $("findings").append(detail);
       $("results").style.display = "block";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
     }
