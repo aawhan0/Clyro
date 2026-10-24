@@ -9,7 +9,7 @@ from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
-NonEmptyText = Annotated[str, Field(min_length=1, strip_whitespace=True)]
+NonEmptyText = Annotated[str, Field(min_length=1)]
 
 
 class StrictModel(BaseModel):
