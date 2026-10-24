@@ -13,8 +13,12 @@ from urllib.request import Request, urlopen
 
 from pydantic import ValidationError
 
+from dotenv import load_dotenv
+
 from app.evidence import EvidenceValidationError, validate_source_evidence
 from app.schemas import OpportunitySource
+
+load_dotenv()
 
 
 DEFAULT_MODEL = "gemma-3-27b-it"
