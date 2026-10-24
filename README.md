@@ -66,13 +66,13 @@ AI assists with extracting information from source text. Structured validation a
 
 | Component | Planned choice |
 |---|---|
-| Frontend | React, Vite, Tailwind CSS |
+| Frontend | Plain HTML, CSS, and JavaScript |
 | Backend | Python, FastAPI |
 | AI-assisted extraction | Hosted Gemma API |
 | Structured validation | Pydantic |
 | Tests | Pytest |
 
-FastAPI now exposes the backend workflow at `POST /api/compare` and `GET /health`. Pasted source text is currently supported; URL fetching and the frontend are not implemented yet.
+FastAPI exposes the backend workflow at `POST /api/compare` and `GET /health`. The plain HTML/CSS/JavaScript interface lives in `frontend/index.html` and is served by FastAPI. Pasted source text is supported; URL fetching is outside the current MVP.
 
 ## Build order
 
@@ -140,9 +140,21 @@ Run backend tests from the backend directory:
 PYTHONPATH=. python -m pytest -q
 ```
 
+## Deployment
+
+A Render Blueprint is provided in `render.yaml`. To deploy:
+
+1. Push this branch to GitHub.
+2. In Render, create a new **Blueprint** and select this repository and the `feat/opportunity-source-schema` branch.
+3. Set `GEMMA_API_KEY` when prompted. Keep it private; never add it to the repository or frontend.
+4. Deploy and wait for the `/health` check to pass.
+5. Open the generated service URL and test a comparison with the demo example.
+
+The service uses `backend/requirements.txt` and starts FastAPI from the `backend` directory. Render's free service may sleep when idle, so the first request after inactivity can be slow. The app also depends on the configured Gemma API being available.
+
 ## Project status
 
-**Early-stage hackathon MVP.** The API now connects extraction, evidence validation, and deterministic comparison. A working end-to-end request still requires a configured Gemma API key. The frontend, URL fetching, and deployment are not implemented yet.
+**Early-stage hackathon MVP.** The frontend and backend are served by one FastAPI service. A working end-to-end comparison requires a valid `GEMMA_API_KEY`. URL fetching is outside the current scope.
 
 ## License
 
