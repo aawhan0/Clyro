@@ -111,3 +111,35 @@ def test_finding_preserves_evidence_quotes():
 
     assert finding["source_a"]["evidence"]["quote"] == "Submit the online form"
     assert finding["source_b"]["evidence"]["quote"] == "Submit the online form"
+
+
+def test_negation_with_different_wording_is_a_conflict():
+    a = make_source({
+        "eligibility_requirements": "Applicants must be enrolled students"
+    })
+    b = make_source({
+        "eligibility_requirements": "Applicants need not be enrolled students"
+    })
+
+    finding = finding_for(
+        compare_sources(a, b),
+        "eligibility_requirements",
+    )
+
+    assert finding["status"] == "conflict"
+
+
+def test_negation_with_contractions_is_not_a_partial_mismatch():
+    a = make_source({
+        "eligibility_requirements": "Applicants are eligible undergraduate students"
+    })
+    b = make_source({
+        "eligibility_requirements": "Applicants aren't eligible undergraduate students"
+    })
+
+    finding = finding_for(
+        compare_sources(a, b),
+        "eligibility_requirements",
+    )
+
+    assert finding["status"] == "conflict"
