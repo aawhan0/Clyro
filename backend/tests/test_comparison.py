@@ -85,6 +85,15 @@ def test_narrower_eligibility_word_set_is_partial_mismatch():
     assert finding["status"] == "partial_mismatch"
 
 
+def test_explicit_eligibility_negation_is_a_conflict_not_scope_difference():
+    a = make_source({"eligibility_requirements": "eligible undergraduate students"})
+    b = make_source({"eligibility_requirements": "not eligible undergraduate students"})
+
+    finding = finding_for(compare_sources(a, b), "eligibility_requirements")
+
+    assert finding["status"] == "conflict"
+
+
 def test_unrelated_eligibility_claims_are_conflicting():
     a = make_source({"eligibility_requirements": "undergraduate students"})
     b = make_source({"eligibility_requirements": "working professionals"})
