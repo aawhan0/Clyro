@@ -1019,8 +1019,14 @@ textarea:focus {
         $("status").textContent = "Done. Check the differences below, then open the evidence if you want to see why a detail was flagged.";
       } catch (error) {
         $("status").className = "status error";
-        $("status").textContent = error.message ||
-          "Could not complete the comparison. Check the backend and try again.";
+        const message = String(error?.message || "");
+        if (/extraction service could not process|extraction_provider_error|request failed \(502\)/i.test(message)) {
+          $("status").textContent = "Clyro's extraction provider is temporarily unavailable. The backend is reachable, but it could not process the sources. Please retry in a moment; if this continues, check the Render logs and GEMMA_API_KEY setting.";
+        } else if (/failed to fetch|networkerror|load failed/i.test(message)) {
+          $("status").textContent = "Could not reach Clyro's API. Check the network connection and try again. If this keeps happening, check the Vercel API rewrite and Render service status.";
+        } else {
+          $("status").textContent = message || "Could not complete the comparison. Please retry.";
+        }
       } finally {
         button.disabled = false;
         button.innerHTML = 'Check for differences <span aria-hidden="true">→</span>';
