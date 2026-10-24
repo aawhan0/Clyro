@@ -586,6 +586,51 @@ textarea:focus {
       .source-card textarea { min-height:145px; }
     }
 
+
+    /* A distinct, editorial footer rather than another content card */
+    .shell { padding-bottom: 54px; }
+    .site-footer {
+      margin-top: 0;
+      padding: 52px max(22px, calc((100vw - 1120px) / 2 + 22px)) 22px;
+      border-top: 1px solid #2c3028;
+      background:
+        radial-gradient(ellipse at 18% 0%, rgba(212,244,119,.055), transparent 42%),
+        #0b0d0b;
+      color: var(--muted);
+    }
+    .footer-inner {
+      max-width: 1076px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(130px, .65fr) minmax(200px, .9fr);
+      gap: clamp(28px, 6vw, 86px);
+      padding: 0 0 42px;
+    }
+    .footer-brand { display:inline-block; color:var(--text); text-decoration:none; font-size:30px; font-weight:900; letter-spacing:-1.8px; line-height:1; }
+    .footer-brand span { color:var(--lime); }
+    .footer-brand-block > p:first-of-type { margin:18px 0 9px; color:var(--text); font-size:15px; font-weight:700; }
+    .footer-description { max-width:360px; margin:0; font-size:13px; line-height:1.8; }
+    .footer-heading { display:block; margin:3px 0 18px; color:var(--text); font-size:10px; font-weight:850; letter-spacing:1.8px; }
+    .footer-nav { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+    .footer-nav a, .footer-github { color:var(--muted); text-decoration:none; font-size:13px; transition:color .18s ease; }
+    .footer-nav a:hover, .footer-github:hover, .back-to-top:hover { color:var(--lime); }
+    .footer-connect p { margin:0 0 16px; max-width:270px; font-size:13px; line-height:1.8; }
+    .footer-github { display:inline-flex; align-items:center; gap:9px; color:var(--text); font-weight:750; }
+    .footer-github span { color:var(--lime); font-size:17px; }
+    .footer-bottom { max-width:1076px; margin:0 auto; padding-top:17px; border-top:1px solid #252921; display:flex; align-items:center; justify-content:space-between; gap:18px; font-size:10px; }
+    .back-to-top { color:var(--muted); text-decoration:none; white-space:nowrap; font-size:10px; font-weight:800; letter-spacing:1px; }
+    @media (max-width:760px) {
+      .shell { padding-bottom:38px; }
+      .site-footer { padding:36px 20px 18px; }
+      .footer-inner { grid-template-columns:1fr 1fr; gap:30px 24px; padding-bottom:28px; }
+      .footer-brand-block { grid-column:1 / -1; }
+      .footer-bottom { align-items:flex-start; flex-direction:column; gap:8px; }
+    }
+    @media (max-width:420px) {
+      .footer-inner { grid-template-columns:1fr; }
+      .footer-brand-block { grid-column:auto; }
+    }
+
   </style>
 </head>
 <body>
@@ -625,7 +670,7 @@ textarea:focus {
       </div>
     </section>
 
-    <section class="input-section" aria-label="Compare opportunity announcements">
+    <section id="inputSection" class="input-section" aria-label="Compare opportunity announcements">
       <div class="input-intro">
         <div>
           <div class="eyebrow">LET'S CHECK THE DETAILS</div>
@@ -696,8 +741,35 @@ textarea:focus {
       <div class="findings" id="findings"></div>
     </section>
 
-    <footer>Clyro - Know before you apply. Verify important details with the opportunity organizer before taking action.</footer>
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand-block">
+        <a class="footer-brand" href="#" aria-label="Clyro home">clyro<span>.</span></a>
+        <p>Opportunity details, without the guesswork.</p>
+        <p class="footer-description">Compare what two announcements say before you spend time applying. Keep the evidence close, and the decision yours.</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Explore Clyro">
+        <span class="footer-heading">EXPLORE</span>
+        <a href="#inputSection">Compare announcements</a>
+        <a href="#valueTitle">Why Clyro</a>
+        <a href="#results">Your comparison</a>
+      </nav>
+
+      <div class="footer-connect">
+        <span class="footer-heading">BUILT WITH INTENT</span>
+        <p>No source rankings. No invented trust scores. Just the differences worth checking.</p>
+        <a class="footer-github" href="https://github.com/aawhan0/Clyro" target="_blank" rel="noopener noreferrer">Explore the project <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Clyro · Know before you apply.</span>
+      <span>Always verify critical details with the opportunity organizer.</span>
+      <a href="#" class="back-to-top">BACK TO TOP ↑</a>
+    </div>
+  </footer>
   <script>
     const $ = id => document.getElementById(id);
     const labels = {
