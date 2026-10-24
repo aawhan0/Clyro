@@ -21,7 +21,7 @@ from app.schemas import OpportunitySource
 load_dotenv()
 
 
-DEFAULT_MODEL = "gemma-3-27b-it"
+DEFAULT_MODEL = "gemma-4-26b-a4b-it"
 MAX_SOURCE_CHARACTERS = 30_000
 
 
