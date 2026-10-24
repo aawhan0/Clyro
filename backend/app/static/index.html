@@ -326,6 +326,47 @@ textarea:focus {
     .row-details summary{font-size:10px}
     .comparison-footnote{padding:8px 12px;font-size:10px}
     @media(max-width:760px){.comparison-columns{display:none}.comparison-row{grid-template-columns:1fr 1fr;padding:10px}.comparison-field{grid-column:1/-1}.comparison-value{padding:7px;border:1px solid var(--border);border-radius:6px;background:#11130f}.mobile-source-label{display:block;margin-bottom:3px;color:var(--muted);font-size:9px;font-weight:800}.comparison-status{grid-column:1/-1}.comparison-card-head{padding:11px}}
+
+    /* Final compact layout: fit the workflow comfortably at default zoom. */
+    .shell { max-width: 1120px; padding: 18px 22px 28px; }
+    .brand { font-size: 22px; }
+    .hero-with-art { padding: 24px 0 20px; gap: 16px; }
+    h1 { font-size: clamp(36px, 4.7vw, 54px); letter-spacing: -2.5px; margin: 9px 0 10px; }
+    .hero p { margin: 0; font-size: 14px; line-height: 1.5; max-width: 570px; }
+    .hero-art svg { width: min(100%, 260px); max-height: 205px; }
+    .source-grid { gap: 12px; }
+    .source-card, .card { padding: 14px; border-radius: 12px; }
+    .card-head { margin-bottom: 8px; }
+    .source-card textarea, textarea { min-height: 124px; height: 124px; padding: 11px 12px; margin-top: 8px; line-height: 1.5; font-size: 13px; resize: vertical; }
+    .actions { margin: 12px 0 22px; gap: 9px; }
+    .primary, .secondary { padding: 10px 15px; font-size: 13px; }
+    #results { margin-top: 18px; }
+    .results-top { margin-bottom: 8px; }
+    .results-top h2 { font-size: 21px; }
+    .results-top p { font-size: 12px; }
+    .notice { margin-bottom: 10px; }
+    .table-summary { margin-bottom: 8px; }
+    .comparison-card-head { padding: 10px 13px; }
+    .comparison-row { padding: 10px 12px; }
+    footer { margin-top: 24px; padding-top: 12px; }
+    @media (min-width: 761px) and (max-height: 850px) {
+      .shell { padding-top: 12px; padding-bottom: 20px; }
+      .hero-with-art { padding-top: 15px; padding-bottom: 14px; }
+      .hero-art svg { width: min(100%, 220px); max-height: 170px; }
+      .source-card textarea, textarea { min-height: 112px; height: 112px; }
+      .actions { margin-bottom: 16px; }
+      footer { margin-top: 18px; }
+    }
+    @media (max-width: 760px) {
+      .shell { padding: 16px 14px 24px; }
+      .hero-with-art { padding: 28px 0 18px; gap: 8px; }
+      .hero-art { display: none; }
+      h1 { font-size: clamp(38px, 10vw, 48px); }
+      .source-card textarea, textarea { min-height: 115px; height: 115px; }
+      .actions { align-items: flex-start; }
+      .status { flex-basis: 100%; }
+    }
+
   </style>
 </head>
 <body>
