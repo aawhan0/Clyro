@@ -89,4 +89,4 @@ def compare(request: CompareRequest) -> CompareResponse:
 @app.get("/", include_in_schema=False)
 def home() -> FileResponse:
     """Serve the Clyro MVP interface."""
-    return FileResponse(Path(__file__).parent / "static" / "index.html")
+    return FileResponse(Path(__file__).resolve().parents[2] / "frontend" / "index.html")
