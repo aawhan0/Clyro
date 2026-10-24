@@ -72,7 +72,7 @@ AI assists with extracting information from source text. Structured validation a
 | Structured validation | Pydantic |
 | Tests | Pytest |
 
-These are planned choices, not a claim that the stack or features are already implemented.
+FastAPI now exposes the backend workflow at `POST /api/compare` and `GET /health`. Pasted source text is currently supported; URL fetching and the frontend are not implemented yet.
 
 ## Build order
 
@@ -103,9 +103,46 @@ Clyro is designed to complement student opportunity platforms, not replace them.
 - Do not expose API keys in frontend code or commit secrets.
 - Label fictional demo data clearly.
 
+## Run the backend
+
+From the repository root, install the backend dependencies and start the API:
+
+```bash
+python -m venv .venv
+# Windows PowerShell: .venv\\Scripts\\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r backend/requirements.txt
+```
+
+Set `GEMMA_API_KEY` in your backend environment, then run:
+
+```bash
+cd backend
+python -m uvicorn app.main:app --reload
+```
+
+- Health check: `GET http://127.0.0.1:8000/health`
+- Compare two sources: `POST http://127.0.0.1:8000/api/compare`
+- Interactive API docs: `http://127.0.0.1:8000/docs`
+
+Example request body:
+
+```json
+{
+  "source_a": "Applications close November 10, 2026. Open to undergraduate students.",
+  "source_b": "Applications close November 15, 2026. Open to undergraduate students."
+}
+```
+
+Run backend tests from the backend directory:
+
+```bash
+PYTHONPATH=. python -m pytest -q
+```
+
 ## Project status
 
-**Early-stage hackathon MVP.** The workflow above describes the intended behavior. Features should be treated as planned until implemented and tested.
+**Early-stage hackathon MVP.** The API now connects extraction, evidence validation, and deterministic comparison. A working end-to-end request still requires a configured Gemma API key. The frontend, URL fetching, and deployment are not implemented yet.
 
 ## License
 
