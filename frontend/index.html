@@ -37,6 +37,18 @@
     h1 span { color: var(--lime); }
     .hero p { color: var(--muted); max-width: 650px; font-size: 17px; }
     .source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .source-meta { display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px; }
+    .source-meta input { width:100%; min-width:0; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:#11130f; color:var(--text); font:inherit; font-size:12px; }
+    .source-meta input:focus { outline:1px solid var(--lime); border-color:var(--lime); }
+    .source-provenance { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 12px; }
+    .source-provenance a,.source-provenance span { display:inline-block; max-width:100%; overflow-wrap:anywhere; padding:8px 11px; border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:12px; text-decoration:none; }
+    .readiness { margin-top:14px; padding:17px 19px; border:1px solid var(--border); border-radius:13px; background:#171a15; }
+    .readiness h3 { font-size:16px; }
+    .readiness p { color:var(--muted); font-size:12px; margin:5px 0 12px; }
+    .readiness-list { display:grid; gap:9px; }
+    .readiness-item { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--text); }
+    .readiness-item input { margin-top:4px; accent-color:var(--lime); }
+    .insight { margin:12px 0 0; padding:10px 12px; border-left:2px solid var(--yellow); border-radius:0 8px 8px 0; background:#191a14; color:#d3d0bf; font-size:12px; line-height:1.6; }
     .card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 20px; min-width: 0; }
     .card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
     h2, h3 { margin: 0; }
@@ -700,6 +712,10 @@ textarea:focus {
           </div>
           <textarea id="sourceA" maxlength="30000" aria-label="Announcement you found" placeholder="Paste the opportunity announcement here..."></textarea>
           <p class="input-helper">The post, forwarded message, or listing that caught your eye.</p>
+          <div class="source-meta">
+            <input id="sourceAName" type="text" maxlength="80" placeholder="Source label (e.g. LinkedIn post)" aria-label="Source A label">
+            <input id="sourceAUrl" type="url" maxlength="500" placeholder="Source URL (optional)" aria-label="Source A URL">
+          </div>
         </article>
         <article class="card source-card">
           <div class="card-head">
@@ -708,6 +724,10 @@ textarea:focus {
           </div>
           <textarea id="sourceB" maxlength="30000" aria-label="Details you are checking against" placeholder="Paste the website or second announcement here..."></textarea>
           <p class="input-helper">A second version to compare against. It doesn't have to be official.</p>
+          <div class="source-meta">
+            <input id="sourceBName" type="text" maxlength="80" placeholder="Source label (e.g. organizer website)" aria-label="Source B label">
+            <input id="sourceBUrl" type="url" maxlength="500" placeholder="Source URL (optional)" aria-label="Source B URL">
+          </div>
           <div class="source-discovery" aria-label="Find a second source">
             <div class="source-discovery-head">
               <strong>Not sure where to find the second source?</strong>
@@ -999,6 +1019,18 @@ textarea:focus {
           }
           row.append(extra);
         }
+        if (item.status !== "match") {
+          const insight = document.createElement("p");
+          insight.className = "insight";
+          const fieldName = labels[item.field] || item.field.replaceAll("_", " ");
+          const explanations = {
+            conflict: "Both sources state a value for this detail, but the values differ. Verify the current details with the opportunity organizer.",
+            partial_mismatch: "The sources describe this requirement differently. Check the exact eligibility or participation conditions before deciding.",
+            not_found: "At least one source does not provide enough information for this field. Missing information is not proof of a conflict."
+          };
+          insight.textContent = (explanations[item.status] || "Review both source statements.") + " Field: " + fieldName + ".";
+          row.append(insight);
+        }
         report.append(row);
       }
 
@@ -1006,7 +1038,56 @@ textarea:focus {
       reportFoot.className = "comparison-footnote";
       reportFoot.textContent = "Differences are based only on the text provided. Verify critical details with the opportunity organizer.";
       report.append(reportFoot);
+      const provenance = document.createElement("div");
+      provenance.className = "source-provenance";
+      for (const [nameId, urlId, fallback] of [
+        ["sourceAName", "sourceAUrl", "Source A"],
+        ["sourceBName", "sourceBUrl", "Source B"]
+      ]) {
+        const label = $(nameId).value.trim() || fallback;
+        const rawUrl = $(urlId).value.trim();
+        let safeUrl = "";
+        try {
+          const parsed = new URL(rawUrl);
+          if (parsed.protocol === "http:" || parsed.protocol === "https:") safeUrl = parsed.href;
+        } catch (_) {}
+        const item = safeUrl ? document.createElement("a") : document.createElement("span");
+        item.textContent = label + (safeUrl ? " ↗" : "");
+        if (safeUrl) { item.href = safeUrl; item.target = "_blank"; item.rel = "noopener noreferrer"; }
+        provenance.append(item);
+      }
+      $("findings").prepend(provenance);
       $("findings").append(report);
+
+      const readiness = document.createElement("section");
+      readiness.className = "readiness";
+      const readinessTitle = document.createElement("h3");
+      readinessTitle.textContent = "Before you apply";
+      const readinessIntro = document.createElement("p");
+      readinessIntro.textContent = "Use this checklist to confirm the details that matter. Checked items are only suggestions based on this comparison.";
+      const readinessList = document.createElement("div");
+      readinessList.className = "readiness-list";
+      const checks = [
+        ["application_deadline", "Confirm the application deadline"],
+        ["eligibility_requirements", "Confirm you meet the eligibility requirements"],
+        ["stipend_or_prize", "Confirm stipend or prize details"],
+        ["location_or_participation_mode", "Confirm location and participation mode"],
+        ["application_method", "Confirm the correct application route"]
+      ];
+      for (const [field, text] of checks) {
+        const finding = findings.find(item => item.field === field);
+        const label = document.createElement("label");
+        label.className = "readiness-item";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = Boolean(finding && finding.status === "match");
+        const copy = document.createElement("span");
+        copy.textContent = text + (finding && finding.status !== "match" ? " — verify" : "");
+        label.append(checkbox, copy);
+        readinessList.append(label);
+      }
+      readiness.append(readinessTitle, readinessIntro, readinessList);
+      $("findings").append(readiness);
       $("results").style.display = "block";
       $("emptyState").style.display = "none";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
