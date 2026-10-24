@@ -46,6 +46,22 @@ def _next_step(field_name: str, status: str, missing_from: list[str]) -> str:
     return f"Verify the conflicting {label} against the organizer's current application page."
 
 
+def _explanation(field_name: str, status: str, missing_from: list[str]) -> str:
+    """Explain the comparison outcome without implying either source is authoritative."""
+    label = field_name.replace("_", " ")
+    if status == "match":
+        return f"Both sources state the same {label}, after case and whitespace normalization."
+    if status == "not_found":
+        if missing_from == ["both"]:
+            return f"Neither source states the {label}; there is nothing to compare yet."
+        missing_source = "Source A" if missing_from == ["source_a"] else "Source B"
+        present_source = "Source B" if missing_source == "Source A" else "Source A"
+        return f"{present_source} states the {label}, but {missing_source} does not. This is missing information, not a confirmed contradiction."
+    if status == "partial_mismatch":
+        return f"Both sources describe the {label}, but their wording differs in scope. Check the exact conditions before relying on either description."
+    return f"Both sources state the {label}, but the values differ. The comparison cannot determine which value is current or correct."
+
+
 def _compare_claims(field_name: str, a: FieldClaim, b: FieldClaim) -> dict[str, Any]:
     missing_from: list[str] = []
     if a.value is None:
@@ -83,6 +99,7 @@ def _compare_claims(field_name: str, a: FieldClaim, b: FieldClaim) -> dict[str, 
         "source_a": _claim_payload(a),
         "source_b": _claim_payload(b),
         "missing_from": missing_from,
+        "explanation": _explanation(field_name, status, missing_from),
         "next_step": _next_step(field_name, status, missing_from),
     }
 
