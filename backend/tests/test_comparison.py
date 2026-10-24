@@ -145,3 +145,67 @@ def test_finding_explains_matching_values():
 
     assert finding["status"] == "match"
     assert "Both sources state the same application method" in finding["explanation"]
+
+def test_missing_source_a_is_identified_and_explained():
+    a = make_source()
+    b = make_source({"application_deadline": "December 1, 2026"})
+
+    finding = finding_for(compare_sources(a, b), "application_deadline")
+
+    assert finding["status"] == "not_found"
+    assert finding["missing_from"] == ["source_a"]
+    assert "Source B states the application deadline" in finding["explanation"]
+    assert "Source A does not" in finding["explanation"]
+
+
+def test_missing_from_both_is_explained_as_unknown_not_conflict():
+    finding = finding_for(
+        compare_sources(make_source(), make_source()),
+        "application_deadline",
+    )
+
+    assert finding["status"] == "not_found"
+    assert finding["missing_from"] == ["both"]
+    assert "Neither source states the application deadline" in finding["explanation"]
+    assert "conflict" not in finding["status"]
+
+
+def test_non_eligibility_differences_remain_conflicts_even_if_one_value_is_shorter():
+    a = make_source({"stipend_or_prize": "INR 10,000"})
+    b = make_source({"stipend_or_prize": "INR 10,000 per month"})
+
+    finding = finding_for(compare_sources(a, b), "stipend_or_prize")
+
+    assert finding["status"] == "conflict"
+
+
+def test_eligibility_subset_rule_does_not_treat_explicit_negation_as_scope_difference():
+    a = make_source({"eligibility_requirements": "undergraduate students"})
+    b = make_source({"eligibility_requirements": "undergraduate students not enrolled full time"})
+
+    finding = finding_for(compare_sources(a, b), "eligibility_requirements")
+
+    assert finding["status"] == "conflict"
+
+
+def test_explanation_and_next_step_exist_for_every_finding_status():
+    a = make_source({
+        "application_deadline": "November 10, 2026",
+        "eligibility_requirements": "undergraduate students",
+        "stipend_or_prize": "INR 10,000",
+        "location_or_participation_mode": "Remote",
+        "application_method": "Apply online",
+    })
+    b = make_source({
+        "application_deadline": "November 15, 2026",
+        "eligibility_requirements": "CS undergraduate students",
+        "stipend_or_prize": None,
+        "location_or_participation_mode": "Remote",
+        "application_method": "Submit online",
+    })
+
+    result = compare_sources(a, b)
+
+    assert all(item["explanation"].strip() for item in result["findings"])
+    assert all(item["next_step"].strip() for item in result["findings"])
+
