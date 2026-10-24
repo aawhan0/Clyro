@@ -658,14 +658,58 @@ textarea:focus {
     .source-discovery .primary { padding:8px 11px; font-size:11px; }
     .source-discovery-note { margin-top:9px !important; margin-bottom:0 !important; }
 
+    /* Saved opportunity workspace — browser-local MVP */
+    .header-actions { display:flex; align-items:center; gap:10px; }
+    .saved-count { display:inline-grid; place-items:center; min-width:20px; height:20px; margin-left:6px; padding:0 5px; border-radius:999px; background:#2a341d; color:var(--lime); font-size:10px; }
+    .opportunity-name { margin:0 0 16px; padding:13px 15px; border:1px solid var(--border); border-radius:10px; background:#151713; }
+    .opportunity-name label { display:block; margin-bottom:6px; color:var(--muted); font-size:11px; font-weight:800; letter-spacing:.7px; }
+    .opportunity-name input { width:100%; padding:10px 11px; border:1px solid var(--border); border-radius:7px; background:#11130f; color:var(--text); font:inherit; font-size:13px; }
+    .opportunity-name input:focus { outline:1px solid var(--lime); border-color:var(--lime); }
+    .result-actions { display:flex; justify-content:flex-end; gap:8px; margin:0 0 12px; }
+    .saved-dashboard { margin:18px 0 24px; padding:20px; border:1px solid #3b4232; border-radius:14px; background:linear-gradient(145deg,#1a1e17,#141612); }
+    .saved-dashboard-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:15px; }
+    .saved-dashboard-head h2 { margin:4px 0; font-size:22px; }
+    .saved-dashboard-head p,.saved-empty { margin:0; color:var(--muted); font-size:12px; }
+    .saved-list { display:grid; gap:10px; }
+    .saved-record { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px; border:1px solid var(--border); border-radius:10px; background:#11130f; }
+    .saved-record-main { min-width:0; }
+    .saved-record-title { margin:0 0 5px; font-size:14px; font-weight:800; overflow-wrap:anywhere; }
+    .saved-record-meta { margin:0; color:var(--muted); font-size:11px; line-height:1.6; }
+    .saved-record-actions { display:flex; flex-shrink:0; flex-wrap:wrap; gap:7px; }
+    .saved-record-actions button { padding:7px 10px; font-size:11px; }
+    .saved-empty { padding:18px 0 5px; }
+    @media(max-width:680px) {
+      .header-actions { align-items:flex-end; flex-direction:column; gap:7px; }
+      .saved-dashboard { padding:15px; }
+      .saved-record { align-items:flex-start; flex-direction:column; }
+      .saved-record-actions { width:100%; }
+      .result-actions { justify-content:flex-start; }
+    }
+
   </style>
 </head>
 <body>
   <main class="shell">
     <header>
       <div class="brand">clyro<span>.</span></div>
-      <div class="badge">EARLY ACCESS / MVP</div>
+      <div class="header-actions">
+        <button class="secondary" type="button" id="savedBtn">Saved opportunities <span class="saved-count" id="savedCount">0</span></button>
+        <div class="badge">EARLY ACCESS / MVP</div>
+      </div>
     </header>
+
+    <section id="savedDashboard" class="saved-dashboard" hidden aria-label="Saved opportunities">
+      <div class="saved-dashboard-head">
+        <div>
+          <div class="eyebrow">YOUR WORKSPACE</div>
+          <h2>Saved opportunities</h2>
+          <p>Reopen a comparison and continue your verification checklist in this browser.</p>
+        </div>
+        <button class="secondary" type="button" id="closeSavedBtn">Close</button>
+      </div>
+      <div id="savedList" class="saved-list"></div>
+      <p id="savedEmpty" class="saved-empty">Nothing saved yet. Run a comparison, then choose “Save comparison”.</p>
+    </section>
 
     <section class="hero hero-with-art">
       <div class="hero-copy">
@@ -705,6 +749,10 @@ textarea:focus {
           <p>Paste the announcement you found and the page or post you want to check it against.</p>
         </div>
         <span class="step-tag">2 texts · 1 clear comparison</span>
+      </div>
+      <div class="opportunity-name">
+        <label for="opportunityName">OPPORTUNITY NAME <span style="font-weight:400;letter-spacing:0">(optional, helps you find it later)</span></label>
+        <input id="opportunityName" type="text" maxlength="160" placeholder="e.g. AI Research Internship">
       </div>
       <div class="source-grid">
         <article class="card source-card">
@@ -789,6 +837,7 @@ textarea:focus {
         <div><div class="eyebrow">Comparison report</div><h2>What needs your attention?</h2><p id="summary"></p></div>
       </div>
       <div class="notice">Clyro reports differences in the supplied text. A conflict is a reason to verify - not proof of fraud or evidence that either source is correct.</div>
+      <div class="result-actions"><button class="primary" type="button" id="saveComparisonBtn">Save comparison</button></div>
       <div class="findings" id="findings"></div>
     </section>
 
@@ -830,6 +879,171 @@ textarea:focus {
       location_or_participation_mode: "Location & participation",
       application_method: "Application method"
     };
+    const STORAGE_KEY = "clyro.savedComparisons.v1";
+    let activeSavedId = null;
+    let latestFindings = null;
+
+    function loadSavedRecords() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed.filter(item => item && typeof item.id === "string") : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function writeSavedRecords(records) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        updateSavedCount(records.length);
+        return true;
+      } catch (_) {
+        $("status").className = "status error";
+        $("status").textContent = "Could not save in this browser. Check available storage and try again.";
+        return false;
+      }
+    }
+
+    function updateSavedCount(count = loadSavedRecords().length) {
+      $("savedCount").textContent = String(count);
+    }
+
+    function currentChecklist() {
+      const state = {};
+      document.querySelectorAll(".readiness-item input[data-field]").forEach(input => {
+        state[input.dataset.field] = input.checked;
+      });
+      return state;
+    }
+
+    function persistActiveChecklist() {
+      if (!activeSavedId) return;
+      const records = loadSavedRecords();
+      const index = records.findIndex(item => item.id === activeSavedId);
+      if (index < 0) return;
+      records[index].checklist = currentChecklist();
+      records[index].updatedAt = new Date().toISOString();
+      writeSavedRecords(records);
+    }
+
+    function renderSavedDashboard() {
+      const records = loadSavedRecords().sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+      updateSavedCount(records.length);
+      const list = $("savedList");
+      list.replaceChildren();
+      $("savedEmpty").hidden = records.length > 0;
+
+      for (const record of records) {
+        const findings = Array.isArray(record.findings) ? record.findings : [];
+        const attention = findings.filter(item => item.status !== "match").length;
+        const completed = Object.values(record.checklist || {}).filter(Boolean).length;
+        const card = document.createElement("article");
+        card.className = "saved-record";
+
+        const main = document.createElement("div");
+        main.className = "saved-record-main";
+        const title = document.createElement("h3");
+        title.className = "saved-record-title";
+        title.textContent = record.title || "Untitled opportunity";
+        const meta = document.createElement("p");
+        meta.className = "saved-record-meta";
+        const date = new Date(record.updatedAt || record.createdAt);
+        const dateLabel = Number.isNaN(date.getTime()) ? "Saved comparison" : "Updated " + date.toLocaleDateString();
+        meta.textContent = dateLabel + " · " + attention + " detail" + (attention === 1 ? "" : "s") + " to review · " + completed + "/5 checklist items checked";
+        main.append(title, meta);
+
+        const actions = document.createElement("div");
+        actions.className = "saved-record-actions";
+        const open = document.createElement("button");
+        open.type = "button";
+        open.className = "primary";
+        open.textContent = "Open";
+        open.addEventListener("click", () => openSavedRecord(record.id));
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "secondary";
+        remove.textContent = "Delete";
+        remove.addEventListener("click", () => {
+          const remaining = loadSavedRecords().filter(item => item.id !== record.id);
+          if (writeSavedRecords(remaining)) {
+            if (activeSavedId === record.id) activeSavedId = null;
+            renderSavedDashboard();
+          }
+        });
+        actions.append(open, remove);
+        card.append(main, actions);
+        list.append(card);
+      }
+    }
+
+    function openSavedRecord(id) {
+      const record = loadSavedRecords().find(item => item.id === id);
+      if (!record) {
+        $("status").className = "status error";
+        $("status").textContent = "That saved comparison is no longer available in this browser.";
+        renderSavedDashboard();
+        return;
+      }
+      $("opportunityName").value = record.title || "";
+      $("sourceA").value = record.sourceA || "";
+      $("sourceB").value = record.sourceB || "";
+      $("sourceAName").value = record.sourceAName || "";
+      $("sourceBName").value = record.sourceBName || "";
+      $("sourceAUrl").value = record.sourceAUrl || "";
+      $("sourceBUrl").value = record.sourceBUrl || "";
+      activeSavedId = record.id;
+      $("savedDashboard").hidden = true;
+      renderFindings(record.findings || [], record.checklist || {});
+      $("status").className = "status";
+      $("status").textContent = "Saved comparison reopened. Checklist changes will be saved in this browser.";
+      $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function saveCurrentComparison() {
+      if (!Array.isArray(latestFindings)) {
+        $("status").className = "status error";
+        $("status").textContent = "Run a comparison before saving it.";
+        return;
+      }
+      const now = new Date().toISOString();
+      const title = $("opportunityName").value.trim()
+        || $("sourceAName").value.trim()
+        || ("Opportunity · " + new Date().toLocaleDateString());
+      const record = {
+        id: (globalThis.crypto && typeof crypto.randomUUID === "function")
+          ? crypto.randomUUID()
+          : ("clyro-" + Date.now() + "-" + Math.random().toString(36).slice(2, 9)),
+        title: title,
+        sourceA: $("sourceA").value,
+        sourceB: $("sourceB").value,
+        sourceAName: $("sourceAName").value.trim(),
+        sourceBName: $("sourceBName").value.trim(),
+        sourceAUrl: $("sourceAUrl").value.trim(),
+        sourceBUrl: $("sourceBUrl").value.trim(),
+        findings: latestFindings,
+        checklist: currentChecklist(),
+        createdAt: now,
+        updatedAt: now
+      };
+      const records = loadSavedRecords();
+      records.push(record);
+      if (writeSavedRecords(records)) {
+        activeSavedId = record.id;
+        $("status").className = "status";
+        $("status").textContent = "Comparison saved in this browser. You can reopen it from Saved opportunities.";
+        renderSavedDashboard();
+      }
+    }
+
+    $("savedBtn").addEventListener("click", () => {
+      renderSavedDashboard();
+      $("savedDashboard").hidden = !$("savedDashboard").hidden;
+      if (!$("savedDashboard").hidden) $("savedDashboard").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    $("closeSavedBtn").addEventListener("click", () => { $("savedDashboard").hidden = true; });
+    $("saveComparisonBtn").addEventListener("click", saveCurrentComparison);
+    updateSavedCount();
+
     const demoA = "Applications close on November 10, 2026. Open to undergraduate students. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
     const demoB = "Applications close on November 15, 2026. Open to undergraduate students in computer science or data science. Stipend: INR 15,000 per month.";
 
@@ -920,7 +1134,8 @@ textarea:focus {
       return article;
     }
 
-    function renderFindings(findings) {
+    function renderFindings(findings, checklistState = {}) {
+      latestFindings = findings;
       const counts = { match: 0, conflict: 0, partial_mismatch: 0, not_found: 0 };
       const attentionItems = findings.filter(item => item.status !== "match");
       const matches = findings.filter(item => item.status === "match");
@@ -1109,7 +1324,11 @@ textarea:focus {
         label.className = "readiness-item";
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = Boolean(finding && finding.status === "match");
+        checkbox.dataset.field = field;
+        checkbox.checked = Object.prototype.hasOwnProperty.call(checklistState, field)
+          ? Boolean(checklistState[field])
+          : Boolean(finding && finding.status === "match");
+        checkbox.addEventListener("change", persistActiveChecklist);
         const copy = document.createElement("span");
         copy.textContent = text + (finding && finding.status !== "match" ? " — verify" : "");
         label.append(checkbox, copy);
@@ -1197,6 +1416,7 @@ textarea:focus {
           throw new Error("The API returned an unexpected response.");
         }
 
+        activeSavedId = null;
         renderFindings(data.findings);
         $("status").textContent = "Done. Check the differences below, then open the evidence if you want to see why a detail was flagged.";
       } catch (error) {
