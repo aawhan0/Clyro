@@ -247,8 +247,7 @@ textarea:focus {
       padding: 20px;
       border-radius: 15px;
       box-shadow: 0 8px 20px rgba(0,0,0,.12);
-    }
-    @media (max-width: 680px) {
+    }    @media (max-width: 680px) {
       .results-top > div { padding: 18px; }
       .result-overview { padding: 16px; }
       .finding { padding: 16px; }
@@ -497,8 +496,7 @@ textarea:focus {
     .value-number { display:block; margin-bottom:9px; color:var(--lime); font-size:10px; font-weight:800; letter-spacing:1px; }
     @media(max-width:760px) {
       .value-section { margin-top:24px; padding:20px 0; }
-      .value-heading { align-items:flex-start; flex-direction:column; gap:7px; }
-      .value-grid { grid-template-columns:1fr; gap:9px; }
+      .value-heading { align-items:flex-start; flex-direction:column; gap:7px; }      .value-grid { grid-template-columns:1fr; gap:9px; }
       .value-item { padding:13px 14px; }
     }
 
@@ -673,6 +671,35 @@ textarea:focus {
       .result-actions { justify-content:flex-start; }
     }
 
+
+    /* Clearer source-entry cards */
+    .input-section { margin-top: 4px; }
+    .input-intro { display:flex; justify-content:space-between; align-items:flex-end; gap:18px; margin-bottom:18px; }
+    .input-intro h2 { margin-top:7px; font-size:clamp(23px,3vw,30px); letter-spacing:-.8px; }
+    .input-intro p { max-width:620px; margin:8px 0 0; color:var(--muted); font-size:14px; }
+    .step-tag { flex-shrink:0; padding:7px 10px; border:1px solid var(--border); border-radius:8px; color:#c7cbbc; font-size:11px; }
+    .opportunity-name { margin-bottom:16px; padding:14px 16px; border:1px solid var(--border); border-radius:12px; background:#151713; }
+    .opportunity-name label { display:block; margin-bottom:7px; color:var(--muted); font-size:10px; font-weight:800; letter-spacing:1.1px; }
+    .opportunity-name input { width:100%; padding:11px 12px; border:1px solid var(--border); border-radius:8px; background:#10120f; color:var(--text); font:inherit; }
+    .opportunity-name input:focus { outline:1px solid var(--lime); border-color:var(--lime); }
+    .source-card { padding:0; overflow:hidden; border-color:#3a4033; background:linear-gradient(150deg,#1b1f19,#151713); }
+    .source-card .card-head { align-items:flex-start; margin:0; padding:18px 20px 15px; border-bottom:1px solid #30362b; }
+    .source-step { display:inline-grid; place-items:center; width:29px; height:29px; margin-right:9px; border:1px solid #465337; border-radius:8px; color:var(--lime); background:#232a1c; font-size:11px; font-weight:850; vertical-align:middle; }
+    .source-card .card-head h2 { display:inline; font-size:16px; letter-spacing:-.2px; vertical-align:middle; }
+    .source-card .card-head .hint { display:block; margin-top:5px; }
+    .source-card textarea { width:calc(100% - 32px); min-height:230px; margin:16px; margin-bottom:8px; border-color:#343b30; background:#10120f; font-size:14px; }
+    .source-card textarea:focus { border-color:var(--lime); box-shadow:0 0 0 3px rgba(212,244,119,.07); }
+    .source-card .input-helper { margin:0 16px 12px; color:#a8ad9e; font-size:11px; }
+    .source-card .source-meta { margin:0; padding:0 16px 17px; }
+    .source-card .source-meta input { padding:10px 11px; background:#11130f; }
+    @media(max-width:680px) {
+      .input-intro { align-items:flex-start; flex-direction:column; }
+      .source-card .card-head { padding:15px; flex-direction:column; }
+      .source-card textarea { width:calc(100% - 28px); margin:14px; margin-bottom:8px; min-height:190px; }
+      .source-card .input-helper { margin-left:14px; margin-right:14px; }
+      .source-card .source-meta { padding:0 14px 14px; }
+    }
+
   </style>
 </head>
 <body>
@@ -681,7 +708,6 @@ textarea:focus {
       <div class="brand">clyro<span>.</span></div>
       <div class="header-actions">
         <a class="nav-link" href="/saved.html">Saved <span class="saved-count" id="savedCount">0</span></a>
-        <div class="badge">EARLY ACCESS / MVP</div>
       </div>
     </header>
 
@@ -720,9 +746,9 @@ textarea:focus {
         <div>
           <div class="eyebrow">LET'S CHECK THE DETAILS</div>
           <h2>Bring both versions.</h2>
-          <p>Paste the announcement you found and the page or post you want to check it against.</p>
+          <p>Compare the announcement you found with a second source. Clyro highlights what changed and what deserves a closer look.</p>
         </div>
-        <span class="step-tag">2 texts · 1 clear comparison</span>
+        <span class="step-tag">Compare two sources side by side</span>
       </div>
       <div class="opportunity-name">
         <label for="opportunityName">OPPORTUNITY NAME <span style="font-weight:400;letter-spacing:0">(optional, helps you find it later)</span></label>
@@ -734,8 +760,8 @@ textarea:focus {
             <div><span class="source-step">01</span><h2>The announcement you found</h2></div>
             <span class="hint">Social post, message or listing</span>
           </div>
-          <textarea id="sourceA" maxlength="30000" aria-label="Announcement you found" placeholder="Paste the opportunity announcement here..."></textarea>
-          <p class="input-helper">The post, forwarded message, or listing that caught your eye.</p>
+          <textarea id="sourceA" maxlength="30000" aria-label="Announcement you found" placeholder="Paste the full announcement, including dates, eligibility, compensation, location, and application instructions..."></textarea>
+          <p class="input-helper">Start with the post, forwarded message, or listing that introduced the opportunity.</p>
           <div class="source-meta">
             <input id="sourceAName" type="text" maxlength="80" placeholder="Source label (e.g. LinkedIn post)" aria-label="Source A label">
             <input id="sourceAUrl" type="url" maxlength="500" placeholder="Source URL (optional)" aria-label="Source A URL">
@@ -746,9 +772,8 @@ textarea:focus {
             <div><span class="source-step">02</span><h2>The details you're checking</h2></div>
             <span class="hint">Website or another announcement</span>
           </div>
-          <textarea id="sourceB" maxlength="30000" aria-label="Details you are checking against" placeholder="Paste the website or second announcement here..."></textarea>
-          <p class="input-helper">A second version to compare against. It doesn't have to be official.</p>
-          <div class="source-meta">
+          <textarea id="sourceB" maxlength="30000" aria-label="Details you are checking against" placeholder="Paste the details from the official website or another announcement. Include the relevant wording where possible..."></textarea>
+          <p class="input-helper">Add the source you want to cross-check. Official pages are useful, but Clyro won't assume either source is correct.</p>          <div class="source-meta">
             <input id="sourceBName" type="text" maxlength="80" placeholder="Source label (e.g. organizer website)" aria-label="Source B label">
             <input id="sourceBUrl" type="url" maxlength="500" placeholder="Source URL (optional)" aria-label="Source B URL">
           </div>
@@ -997,8 +1022,7 @@ textarea:focus {
       const evidenceClaims = [["source_a", "Source A"], ["source_b", "Source B"]]
         .map(([key, name]) => ({ name, evidence: item[key]?.evidence?.quote }))
         .filter(entry => entry.evidence);
-      if (evidenceClaims.length) {
-        const evidence = document.createElement("details");
+      if (evidenceClaims.length) {        const evidence = document.createElement("details");
         evidence.className = "evidence-details";
         const toggle = document.createElement("summary");
         toggle.className = "evidence-toggle";
@@ -1247,7 +1271,6 @@ textarea:focus {
       const excerpt = cleaned.split(" ").slice(0, 22).join(" ");
       return (excerpt + " official application eligibility deadline").slice(0, 320).trim();
     }
-
     function refreshSourceQuery() {
       const query = suggestedSourceQuery();
       $("sourceSearchQuery").value = query;
