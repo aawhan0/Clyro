@@ -11,4 +11,4 @@ services:
       - key: GEMMA_API_KEY
         sync: false
       - key: GEMMA_MODEL
-        value: gemma-3-27b-it
+        value: gemma-4-26b-a4b-it
