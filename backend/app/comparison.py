@@ -61,11 +61,17 @@ def _compare_claims(field_name: str, a: FieldClaim, b: FieldClaim) -> dict[str, 
         status = "match"
     elif field_name == "eligibility_requirements":
         tokens_a, tokens_b = _tokens(a.value), _tokens(b.value)
-        # A strict token-subset relationship indicates differently scoped text,
-        # not proof that either source is correct or that the claims are equivalent.
+        # Never treat an explicit negation as merely a scope difference.
+        # A token-set subset is only a weak lexical signal, not semantic reasoning.
+        negation_tokens = {"not", "no", "never", "neither", "nor", "ineligible"}
+        has_negation_a = bool(tokens_a & negation_tokens)
+        has_negation_b = bool(tokens_b & negation_tokens)
+        strict_subset = tokens_a != tokens_b and (
+            tokens_a < tokens_b or tokens_b < tokens_a
+        )
         status = (
             "partial_mismatch"
-            if tokens_a != tokens_b and (tokens_a < tokens_b or tokens_b < tokens_a)
+            if strict_subset and has_negation_a == has_negation_b
             else "conflict"
         )
     else:
