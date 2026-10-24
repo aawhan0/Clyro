@@ -128,3 +128,41 @@ def test_extract_rejects_overlong_input_before_provider_call(monkeypatch):
     source_text = "x" * (extraction.MAX_SOURCE_CHARACTERS + 1)
     with pytest.raises(extraction.ExtractionResponseError, match="character MVP limit"):
         extraction.extract_source(source_text, api_key="test-key")
+
+def test_extract_rejects_fabricated_evidence_before_returning_source(monkeypatch):
+    payload = response_payload(
+        {"application_deadline": "December 1, 2026"}
+    )
+    payload["fields"]["application_deadline"]["evidence"]["quote"] = (
+        "Applications close December 1, 2026"
+    )
+    monkeypatch.setattr(
+        extraction, "_request_gemma", lambda *_args: json.dumps(payload)
+    )
+
+    with pytest.raises(
+        extraction.ExtractionResponseError, match="application_deadline"
+    ):
+        extraction.extract_source(
+            "Applications close November 10, 2026.", api_key="test-key"
+        )
+
+
+def test_extract_accepts_evidence_with_whitespace_variation(monkeypatch):
+    payload = response_payload(
+        {"eligibility_requirements": "Open to final-year students"}
+    )
+    payload["fields"]["eligibility_requirements"]["evidence"]["quote"] = (
+        "Open to final-year\\nstudents"
+    )
+    monkeypatch.setattr(
+        extraction, "_request_gemma", lambda *_args: json.dumps(payload)
+    )
+
+    result = extraction.extract_source(
+        "Eligibility: Open to final-year students.", api_key="test-key"
+    )
+
+    assert result.fields.eligibility_requirements.value == (
+        "Open to final-year students"
+    )

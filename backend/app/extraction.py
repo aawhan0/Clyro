@@ -1,7 +1,7 @@
 """Pasted-text extraction through the hosted Gemma generateContent API.
 
-The model proposes structured claims; Pydantic validates their shape. Verifying
-that each evidence quote literally occurs in source_text is a separate stage.
+The model proposes structured claims; Pydantic validates their shape. A separate
+literal evidence check rejects quotes absent from the supplied source text.
 """
 
 import json
@@ -13,6 +13,7 @@ from urllib.request import Request, urlopen
 
 from pydantic import ValidationError
 
+from app.evidence import EvidenceValidationError, validate_source_evidence
 from app.schemas import OpportunitySource
 
 
@@ -29,7 +30,7 @@ class ExtractionProviderError(ExtractionError):
 
 
 class ExtractionResponseError(ExtractionError):
-    """The model response was not valid structured data."""
+    """The model response was not valid structured data or evidence."""
 
 
 def _build_prompt(source_text: str) -> str:
@@ -133,7 +134,7 @@ def extract_source(
     api_key: str | None = None,
     model: str | None = None,
 ) -> OpportunitySource:
-    """Extract one source using Gemma; raises clear errors rather than guessing."""
+    """Extract one source and validate its evidence before returning it."""
     if not isinstance(source_text, str) or not source_text.strip():
         raise ExtractionResponseError("Source text must not be empty.")
     if len(source_text) > MAX_SOURCE_CHARACTERS:
@@ -152,4 +153,8 @@ def extract_source(
         resolved_key,
         model or os.getenv("GEMMA_MODEL", DEFAULT_MODEL),
     )
-    return parse_extraction_response(source_text, response_text)
+    parsed = parse_extraction_response(source_text, response_text)
+    try:
+        return validate_source_evidence(parsed)
+    except EvidenceValidationError as exc:
+        raise ExtractionResponseError(str(exc)) from exc
