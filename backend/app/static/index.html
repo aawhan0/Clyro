@@ -243,6 +243,54 @@ textarea:focus {
       .overview-count strong { font-size: 34px; }
     }
 
+  
+    /* Compact, single-card comparison experience */
+    .hero-with-art { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr); align-items:center; gap:24px; max-width:none; padding:54px 0 34px; }
+    .hero-copy { max-width:650px; }
+    .hero-art { display:flex; align-items:center; justify-content:center; min-width:0; }
+    .hero-art svg { display:block; width:min(100%,350px); height:auto; overflow:visible; }
+    .comparison-card { overflow:hidden; border:1px solid #3b4232; border-radius:18px; background:linear-gradient(145deg,#1a1e17,#141612); box-shadow:0 14px 38px rgba(0,0,0,.2); }
+    .comparison-card-head { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:22px 24px; border-bottom:1px solid var(--border); }
+    .comparison-card-head h3 { margin-top:5px; font-size:21px; letter-spacing:-.5px; }
+    .comparison-card-head p { margin:5px 0 0; color:var(--muted); font-size:13px; }
+    .legend { display:flex; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:11px; white-space:nowrap; }
+    .legend span { display:flex; align-items:center; gap:6px; }
+    .legend-dot { display:inline-block; width:7px; height:7px; border-radius:50%; }
+    .legend-dot.issue { background:var(--yellow); }
+    .legend-dot.ok { background:var(--green); }
+    .comparison-columns { display:grid; grid-template-columns:minmax(150px,1.05fr) minmax(0,1fr) minmax(0,1fr) 112px; gap:14px; padding:11px 22px; background:#131510; color:#89917d; font-size:10px; font-weight:800; letter-spacing:1.1px; }
+    .comparison-row { display:grid; grid-template-columns:minmax(150px,1.05fr) minmax(0,1fr) minmax(0,1fr) 112px; gap:14px; align-items:start; padding:17px 22px; border-top:1px solid #2b3027; }
+    .comparison-row.needs-check { background:linear-gradient(90deg,rgba(244,216,135,.045),transparent 65%); }
+    .comparison-field { display:flex; align-items:center; gap:10px; min-width:0; font-size:13px; font-weight:750; line-height:1.4; }
+    .field-icon { display:grid; place-items:center; flex:0 0 34px; width:34px; height:34px; border:1px solid #39412f; border-radius:10px; background:#20251a; color:var(--lime); }
+    .field-icon svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    .comparison-value { min-width:0; overflow-wrap:anywhere; color:#e8e9df; font-size:13px; line-height:1.55; padding-top:6px; }
+    .comparison-status { display:flex; justify-content:flex-start; padding-top:5px; }
+    .comparison-status .status-pill { font-size:9px; }
+    .mobile-source-label { display:none; }
+    .row-details { grid-column:2 / -1; min-width:0; margin-top:-2px; }
+    .row-details summary { color:var(--lime); cursor:pointer; font-size:11px; font-weight:700; }
+    .row-details .evidence-grid { grid-template-columns:1fr 1fr; padding:10px 0 0; border:0; }
+    .row-details blockquote { margin-top:6px; font-size:12px; line-height:1.6; }
+    .row-details .next { margin:10px 0 0; padding:10px 12px; border:1px solid #373d30; border-radius:9px; background:#131510; font-size:12px; }
+    .comparison-footnote { margin:0; padding:14px 22px; border-top:1px solid var(--border); color:var(--muted); font-size:11px; }
+    .result-overview { margin-bottom:18px; }
+    @media (max-width:760px) {
+      .hero-with-art { grid-template-columns:1fr; padding-top:42px; gap:4px; }
+      .hero-art { justify-content:flex-start; max-height:170px; overflow:hidden; }
+      .hero-art svg { width:210px; }
+      .comparison-columns { display:none; }
+      .comparison-row { grid-template-columns:1fr 1fr; gap:10px 14px; padding:15px; }
+      .comparison-field { grid-column:1 / -1; }
+      .comparison-value { padding:9px 10px; border:1px solid var(--border); border-radius:9px; background:#131510; }
+      .mobile-source-label { display:block; margin-bottom:4px; color:var(--muted); font-size:9px; font-weight:800; letter-spacing:1px; }
+      .comparison-status { grid-column:1 / -1; padding:0; }
+      .row-details { grid-column:1 / -1; margin-top:0; }
+      .comparison-card-head { align-items:flex-start; flex-direction:column; padding:18px; }
+      .row-details .evidence-grid { grid-template-columns:1fr; }
+      .comparison-footnote { padding:13px 16px; }
+    }
+
   </style>
 </head>
 <body>
@@ -252,10 +300,34 @@ textarea:focus {
       <div class="badge">EARLY ACCESS / MVP</div>
     </header>
 
-    <section class="hero">
-      <div class="eyebrow">Opportunity clarity, not guesswork</div>
-      <h1>Know before<br>you <span>apply.</span></h1>
-      <p>Compare two announcements for the same opportunity. Spot conflicting deadlines, eligibility rules and missing details, with source evidence to help you decide what to verify.</p>
+    <section class="hero hero-with-art">
+      <div class="hero-copy">
+        <div class="eyebrow">Opportunity clarity, not guesswork</div>
+        <h1>Know before<br>you <span>apply.</span></h1>
+        <p>Compare two announcements for the same opportunity. Spot conflicting deadlines, eligibility rules and missing details, with source evidence to help you decide what to verify.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 360 290" role="img" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="paperGlow" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#d4f477" stop-opacity=".16"/>
+              <stop offset="1" stop-color="#d4f477" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <rect x="43" y="24" width="205" height="242" rx="18" fill="url(#paperGlow)" stroke="#66704a" stroke-width="1.5"/>
+          <path d="M78 72h105M78 93h128M78 114h81" stroke="#596148" stroke-width="5" stroke-linecap="round"/>
+          <rect x="75" y="142" width="132" height="42" rx="9" fill="#d4f477" fill-opacity=".12" stroke="#d4f477" stroke-opacity=".55"/>
+          <path d="M89 163l8 8 16-18" fill="none" stroke="#d4f477" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M132 162h58" stroke="#d4f477" stroke-width="4" stroke-linecap="round"/>
+          <rect x="110" y="203" width="98" height="10" rx="5" fill="#596148" opacity=".8"/>
+          <rect x="110" y="224" width="68" height="10" rx="5" fill="#596148" opacity=".55"/>
+          <circle cx="255" cy="205" r="56" fill="#10120f" stroke="#d4f477" stroke-opacity=".65" stroke-width="1.5"/>
+          <circle cx="247" cy="197" r="22" fill="none" stroke="#d4f477" stroke-width="7"/>
+          <path d="M263 214l21 21" stroke="#d4f477" stroke-width="8" stroke-linecap="round"/>
+          <path d="M235 197h24M247 185v24" stroke="#d4f477" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
+          <path d="M20 51h12M26 45v12M300 75h18M309 66v18" stroke="#d4f477" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
     </section>
 
     <section aria-label="Source inputs">
@@ -382,60 +454,119 @@ textarea:focus {
 
     function renderFindings(findings) {
       const counts = { match: 0, conflict: 0, partial_mismatch: 0, not_found: 0 };
-      const attentionItems = [];
-      const matches = [];
+      const attentionItems = findings.filter(item => item.status !== "match");
+      const matches = findings.filter(item => item.status === "match");
       $("findings").replaceChildren();
-
-      for (const item of findings) {
-        counts[item.status] = (counts[item.status] || 0) + 1;
-        if (item.status === "match") matches.push(item);
-        else attentionItems.push(item);
-      }
 
       $("summary").textContent = attentionItems.length
         ? `${attentionItems.length} detail${attentionItems.length === 1 ? "" : "s"} need${attentionItems.length === 1 ? "s" : ""} your attention.`
         : "No differences were detected in the fields compared.";
+      for (const item of findings) counts[item.status] = (counts[item.status] || 0) + 1;
 
       const overview = document.createElement("div");
       overview.className = "result-overview";
-      const count = document.createElement("div");
-      count.className = "overview-count";
-      const number = document.createElement("strong");
-      number.textContent = String(attentionItems.length);
-      const label = document.createElement("span");
-      label.textContent = attentionItems.length === 1 ? "detail to verify" : "details to verify";
-      count.append(number, label);
-      const note = document.createElement("div");
-      note.className = "overview-note";
-      note.textContent = `${counts.match} of ${findings.length} fields match`;
-      overview.append(count, note);
+      overview.innerHTML = `
+        <div class="overview-count"><strong>${attentionItems.length}</strong><span>${attentionItems.length === 1 ? "detail to verify" : "details to verify"}</span></div>
+        <div class="overview-note">${counts.match} of ${findings.length} fields match</div>`;
       $("findings").append(overview);
 
-      if (attentionItems.length) {
-        const attentionLabel = document.createElement("div");
-        attentionLabel.className = "section-label";
-        attentionLabel.textContent = "Needs your attention";
-        $("findings").append(attentionLabel);
-        for (const item of attentionItems) $("findings").append(createFinding(item));
-      } else {
-        const allClear = document.createElement("div");
-        allClear.className = "all-clear";
-        allClear.textContent = "No discrepancies found in the fields compared. Still verify critical details with the organizer before applying.";
-        $("findings").append(allClear);
+      const report = document.createElement("article");
+      report.className = "comparison-card";
+      const reportHead = document.createElement("div");
+      reportHead.className = "comparison-card-head";
+      reportHead.innerHTML = `<div><div class="eyebrow">Side-by-side overview</div><h3>Opportunity details</h3><p>Scan each field, then open evidence only when you need it.</p></div>
+        <div class="legend"><span><i class="legend-dot issue"></i> Verify</span><span><i class="legend-dot ok"></i> Match</span></div>`;
+      report.append(reportHead);
+
+      const columnHead = document.createElement("div");
+      columnHead.className = "comparison-columns";
+      columnHead.innerHTML = `<span>FIELD</span><span>SOURCE A</span><span>SOURCE B</span><span>STATUS</span>`;
+      report.append(columnHead);
+
+      const icons = {
+        application_deadline: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M7.5 3v4M16.5 3v4M4 9.5h16M8 13h3M8 16.5h6"/></svg>',
+        eligibility_requirements: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.5-3 2.4-4.5 5.5-4.5 2 0 3.5.7 4.5 2M16 8h5M18.5 5.5v5M15.5 15.5l2 2 3.5-4"/></svg>',
+        stipend_or_prize: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.8-1-2-1.4-3.5-1.2-2.8.4-2.8 3 .2 3.7 3.5.8 3.2 3.8.1 4.2-1.4.2-2.8-.3-3.7-1.3M12 5.5v13"/></svg>',
+        location_or_participation_mode: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.3"/></svg>',
+        application_method: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>'
+      };
+
+      for (const item of findings) {
+        const row = document.createElement("section");
+        row.className = "comparison-row " + (item.status === "match" ? "is-match" : "needs-check");
+        const field = document.createElement("div");
+        field.className = "comparison-field";
+        const icon = document.createElement("span");
+        icon.className = "field-icon";
+        icon.innerHTML = icons[item.field] || '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+        const fieldName = document.createElement("span");
+        fieldName.textContent = labels[item.field] || item.field.replaceAll("_", " ");
+        field.append(icon, fieldName);
+
+        const valueA = document.createElement("div");
+        valueA.className = "comparison-value";
+        valueA.innerHTML = '<span class="mobile-source-label">SOURCE A</span>';
+        const valueAText = document.createElement("span");
+        valueAText.textContent = safeText(item.source_a?.value);
+        valueA.append(valueAText);
+
+        const valueB = document.createElement("div");
+        valueB.className = "comparison-value";
+        valueB.innerHTML = '<span class="mobile-source-label">SOURCE B</span>';
+        const valueBText = document.createElement("span");
+        valueBText.textContent = safeText(item.source_b?.value);
+        valueB.append(valueBText);
+
+        const status = document.createElement("div");
+        status.className = "comparison-status";
+        const pill = document.createElement("span");
+        pill.className = "status-pill " + item.status;
+        pill.textContent = ({ match: "MATCH", conflict: "CONFLICT", partial_mismatch: "SCOPE DIFFERS", not_found: "MISSING" })[item.status] || item.status.toUpperCase();
+        status.append(pill);
+
+        row.append(field, valueA, valueB, status);
+
+        const evidenceClaims = [["source_a", "Source A"], ["source_b", "Source B"]]
+          .map(([key, name]) => ({ name, evidence: item[key]?.evidence?.quote }))
+          .filter(entry => entry.evidence);
+        if (evidenceClaims.length || (item.status !== "match" && item.next_step)) {
+          const extra = document.createElement("details");
+          extra.className = "row-details";
+          const summary = document.createElement("summary");
+          summary.textContent = evidenceClaims.length ? "Evidence & next step" : "Suggested next step";
+          extra.append(summary);
+          if (evidenceClaims.length) {
+            const evidenceGrid = document.createElement("div");
+            evidenceGrid.className = "evidence-grid";
+            for (const entry of evidenceClaims) {
+              const wrap = document.createElement("div");
+              wrap.className = "evidence-item";
+              const label = document.createElement("div");
+              label.className = "claim-label";
+              label.textContent = entry.name + " · quoted text";
+              const quote = document.createElement("blockquote");
+              quote.textContent = '"' + entry.evidence + '"';
+              wrap.append(label, quote);
+              evidenceGrid.append(wrap);
+            }
+            extra.append(evidenceGrid);
+          }
+          if (item.status !== "match") {
+            const next = document.createElement("p");
+            next.className = "next";
+            next.textContent = "Suggested next step: " + (item.next_step || "Review the original sources.");
+            extra.append(next);
+          }
+          row.append(extra);
+        }
+        report.append(row);
       }
 
-      if (matches.length) {
-        const details = document.createElement("details");
-        details.className = "matches-details";
-        const summary = document.createElement("summary");
-        summary.textContent = `Everything else matches · ${matches.length} field${matches.length === 1 ? "" : "s"}`;
-        const list = document.createElement("div");
-        list.className = "matches-list";
-        for (const item of matches) list.append(createFinding(item, true));
-        details.append(summary, list);
-        $("findings").append(details);
-      }
-
+      const reportFoot = document.createElement("p");
+      reportFoot.className = "comparison-footnote";
+      reportFoot.textContent = "Differences are based only on the text provided. Verify critical details with the opportunity organizer.";
+      report.append(reportFoot);
+      $("findings").append(report);
       $("results").style.display = "block";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
     }
