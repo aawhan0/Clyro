@@ -429,6 +429,47 @@ textarea:focus {
       footer { margin-top: 22px; }
     }
 
+  
+    /* Spacing pass: give each section room without adding unnecessary page height. */
+    .shell { max-width: 1160px; padding: 26px 28px 30px; }
+    header { margin-bottom: 0; }
+    .hero-with-art { padding: 42px 0 30px; gap: 42px; }
+    .hero-copy .eyebrow { margin-bottom: 8px; }
+    .hero-copy h1 { margin: 8px 0 13px; }
+    .hero-copy p { max-width: 620px; }
+    .source-grid { gap: 18px; }
+    .source-card, .card { padding: 18px; }
+    .card-head { margin-bottom: 14px; }
+    .source-card textarea, textarea { margin-top: 0; }
+    .actions { margin: 16px 0 0; gap: 12px; }
+    .empty-state { margin-top: 28px; padding-top: 18px; }
+    .empty-state-copy p { margin: 8px 0 0; }
+    .empty-state-fields { gap: 8px; }
+    footer { margin-top: 24px; padding-top: 14px; }
+    #results { margin-top: 30px; }
+    .results-top { margin-bottom: 12px; }
+    .notice { margin-bottom: 14px; }
+    .table-summary { margin-bottom: 14px; }
+    .comparison-card-head { padding: 17px 20px; }
+    .comparison-columns { padding: 11px 20px; }
+    .comparison-row { padding: 15px 20px; }
+    .comparison-footnote { padding: 12px 20px; }
+    @media (min-width: 761px) {
+      .hero-with-art { min-height: 255px; }
+      .source-grid { align-items: stretch; }
+      .source-card { display: flex; flex-direction: column; }
+      .source-card textarea { flex: 1; }
+    }
+    @media (max-width: 760px) {
+      .shell { padding: 20px 18px 24px; }
+      .hero-with-art { padding: 28px 0 22px; gap: 12px; }
+      .source-grid { gap: 14px; }
+      .actions { margin-top: 14px; }
+      .empty-state { margin-top: 24px; gap: 14px; }
+      footer { margin-top: 24px; }
+      #results { margin-top: 26px; }
+    }
+
   </style>
 </head>
 <body>
