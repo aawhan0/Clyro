@@ -298,6 +298,34 @@ textarea:focus {
 @media(max-width:680px){.quick-head{padding:16px}.quick-issues{padding:0 16px}.quick-issue{align-items:flex-start;flex-direction:column;gap:8px}.quick-clear{padding:0 16px 16px}.quick-foot{padding:10px 16px}.detailed-report>summary{padding:13px}}
 
     .table-summary{margin:0 0 12px;padding:0 2px;color:var(--muted);font-size:13px}.comparison-card{overflow:hidden;border:1px solid var(--border);border-radius:12px;background:#151713;box-shadow:none}.comparison-card-head{padding:16px 18px;border-bottom:1px solid var(--border);background:#191c18}.comparison-card-head h3{margin:0;font-size:17px;letter-spacing:0}.comparison-card-head p,.legend{display:none}.comparison-columns,.comparison-row{grid-template-columns:minmax(150px,1.05fr) minmax(0,1fr) minmax(0,1fr) 112px;gap:12px}.comparison-columns{padding:10px 16px;background:#11130f;font-size:10px}.comparison-row{padding:13px 16px;border-top:1px solid #2b3027;align-items:center}.comparison-row.needs-check{background:rgba(244,216,135,.035)}.comparison-field{gap:8px;font-size:12px}.field-icon{display:none}.comparison-value{padding-top:0;font-size:12px;line-height:1.5}.comparison-status{padding-top:0}.comparison-status .status-pill{font-size:9px;padding:4px 7px}.comparison-footnote{padding:11px 16px}@media(max-width:760px){.comparison-columns{display:none}.comparison-row{grid-template-columns:1fr 1fr;padding:13px}.comparison-field{grid-column:1/-1}.comparison-value{padding:8px;border:1px solid var(--border);border-radius:7px;background:#11130f}.mobile-source-label{display:block;margin-bottom:3px;color:var(--muted);font-size:9px;font-weight:800}.comparison-status{grid-column:1/-1}.comparison-card-head{padding:15px}}
+
+    /* Compact report: title first, data immediately below. */
+    #results{margin-top:24px;scroll-margin-top:14px}
+    .results-top{display:block;margin:0 0 8px;padding:0;border:0;background:transparent;box-shadow:none}
+    .results-top .eyebrow{margin-bottom:5px}
+    .results-top h2{font-size:22px;line-height:1.2;margin:0}
+    .results-top p{margin:4px 0 0;font-size:12px}
+    .notice{margin:0 0 10px;padding:8px 11px;font-size:11px;border-radius:7px}
+    .findings{gap:8px}
+    .table-summary{font-size:11px;margin:0;padding:0 1px;color:var(--muted)}
+    .comparison-card{border-radius:9px;box-shadow:none;background:#151713}
+    .comparison-card-head{padding:10px 13px;background:#191c18}
+    .comparison-card-head .eyebrow{margin:0;font-size:9px}
+    .comparison-card-head h3{font-size:15px;margin:2px 0 0}
+    .comparison-card-head p,.legend{display:none}
+    .comparison-columns,.comparison-row{grid-template-columns:minmax(135px,1.05fr) minmax(0,1fr) minmax(0,1fr) 100px;gap:9px}
+    .comparison-columns{padding:7px 12px;font-size:9px}
+    .comparison-row{padding:9px 12px;align-items:center}
+    .comparison-field{gap:7px;font-size:11px}
+    .field-icon{width:25px;height:25px;flex:0 0 25px}
+    .field-icon svg{width:14px;height:14px}
+    .comparison-value{padding-top:0;font-size:11px;line-height:1.35}
+    .comparison-status{padding-top:0}
+    .comparison-status .status-pill{font-size:8px;padding:4px 6px}
+    .row-details{margin-top:6px}
+    .row-details summary{font-size:10px}
+    .comparison-footnote{padding:8px 12px;font-size:10px}
+    @media(max-width:760px){.comparison-columns{display:none}.comparison-row{grid-template-columns:1fr 1fr;padding:10px}.comparison-field{grid-column:1/-1}.comparison-value{padding:7px;border:1px solid var(--border);border-radius:6px;background:#11130f}.mobile-source-label{display:block;margin-bottom:3px;color:var(--muted);font-size:9px;font-weight:800}.comparison-status{grid-column:1/-1}.comparison-card-head{padding:11px}}
   </style>
 </head>
 <body>
