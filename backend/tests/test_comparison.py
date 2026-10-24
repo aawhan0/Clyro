@@ -111,3 +111,37 @@ def test_finding_preserves_evidence_quotes():
 
     assert finding["source_a"]["evidence"]["quote"] == "Submit the online form"
     assert finding["source_b"]["evidence"]["quote"] == "Submit the online form"
+
+
+
+def test_finding_explains_conflict_without_picking_a_winner():
+    a = make_source({"application_deadline": "November 10, 2026"})
+    b = make_source({"application_deadline": "November 15, 2026"})
+
+    finding = finding_for(compare_sources(a, b), "application_deadline")
+
+    assert finding["explanation"] == (
+        "Both sources state the application deadline, but the values differ. "
+        "The comparison cannot determine which value is current or correct."
+    )
+
+
+def test_finding_explains_missing_information_separately_from_conflict():
+    a = make_source({"stipend_or_prize": "INR 10,000"})
+    b = make_source()
+
+    finding = finding_for(compare_sources(a, b), "stipend_or_prize")
+
+    assert finding["status"] == "not_found"
+    assert "Source A states the stipend or prize" in finding["explanation"]
+    assert "not a confirmed contradiction" in finding["explanation"]
+
+
+def test_finding_explains_matching_values():
+    a = make_source({"application_method": "Apply online"})
+    b = make_source({"application_method": "APPLY ONLINE"})
+
+    finding = finding_for(compare_sources(a, b), "application_method")
+
+    assert finding["status"] == "match"
+    assert "Both sources state the same application method" in finding["explanation"]
