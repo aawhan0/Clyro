@@ -153,7 +153,7 @@ def test_extract_accepts_evidence_with_whitespace_variation(monkeypatch):
         {"eligibility_requirements": "Open to final-year students"}
     )
     payload["fields"]["eligibility_requirements"]["evidence"]["quote"] = (
-        "Open to final-year\\nstudents"
+        "Open to final-year\nstudents"
     )
     monkeypatch.setattr(
         extraction, "_request_gemma", lambda *_args: json.dumps(payload)

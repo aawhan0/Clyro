@@ -24,7 +24,7 @@ def validate_source_evidence(source: OpportunitySource) -> OpportunitySource:
     normalized_source = _normalize_whitespace(source.source_text)
     invalid_fields = []
 
-    for field_name in source.fields.model_fields:
+    for field_name in type(source.fields).model_fields:
         claim = getattr(source.fields, field_name)
         if claim.value is None:
             continue
