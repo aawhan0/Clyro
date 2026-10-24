@@ -60,6 +60,33 @@
     .results-top p { margin: 4px 0 0; color: var(--muted); }
     .notice { border: 1px solid #4b503d; border-radius: 10px; padding: 12px 15px; color: var(--muted); margin-bottom: 16px; font-size: 13px; }
     .findings { display: grid; gap: 12px; }
+    .result-overview { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+    .overview-count { display: flex; align-items: baseline; gap: 9px; }
+    .overview-count strong { color: var(--lime); font-size: clamp(26px, 4vw, 38px); line-height: 1; letter-spacing: -1.5px; }
+    .overview-count span { color: var(--muted); font-size: 13px; }
+    .overview-note { color: var(--muted); font-size: 13px; }
+    .section-label { margin: 22px 0 10px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+    .finding { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 16px; }
+    .finding.attention { border-color: #65552d; }
+    .finding-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .finding h3 { font-size: 15px; text-transform: none; }
+    .status-pill { border-radius: 999px; padding: 4px 9px; font-size: 10px; font-weight: 800; white-space: nowrap; }
+    .claims { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .claim { border: 1px solid var(--border); border-radius: 9px; padding: 11px; min-width: 0; }
+    .claim-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .claim-value { margin: 4px 0 0; overflow-wrap: anywhere; font-size: 14px; }
+    .evidence-toggle { display: inline-block; margin-top: 12px; color: var(--lime); font-size: 12px; cursor: pointer; }
+    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+    .evidence-item { min-width: 0; }
+    .evidence-item blockquote { margin-top: 5px; border-left: 2px solid var(--lime); padding-left: 10px; color: #c7cbbc; font-size: 12px; overflow-wrap: anywhere; }
+    .next { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+    .matches-details { border: 1px solid var(--border); border-radius: 12px; background: #151713; }
+    .matches-details > summary { padding: 14px 16px; cursor: pointer; color: var(--text); font-size: 13px; font-weight: 750; }
+    .matches-details > summary::marker { color: var(--lime); }
+    .matches-list { display: grid; gap: 10px; padding: 0 12px 12px; }
+    .matches-list .finding { background: #191c18; }
+    .all-clear { border: 1px solid #344b32; background: #182118; color: var(--green); border-radius: 12px; padding: 16px; font-size: 14px; }
+    .notice { margin-bottom: 14px; }
     .finding { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px; }
     .finding-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
     .finding h3 { font-size: 16px; text-transform: capitalize; }
@@ -183,67 +210,133 @@ textarea:focus {
       return value == null ? "Not stated in this source" : String(value);
     }
 
+    function createFinding(item, compact = false) {
+      const article = document.createElement("article");
+      article.className = "finding" + (item.status === "match" ? "" : " attention");
+
+      const head = document.createElement("div");
+      head.className = "finding-head";
+      const title = document.createElement("h3");
+      title.textContent = labels[item.field] || item.field.replaceAll("_", " ");
+      const pill = document.createElement("span");
+      pill.className = "status-pill " + item.status;
+      pill.textContent = ({
+        match: "MATCH",
+        conflict: "CONFLICT · VERIFY",
+        partial_mismatch: "SCOPE DIFFERS",
+        not_found: "MISSING INFO"
+      })[item.status] || item.status.toUpperCase();
+      head.append(title, pill);
+      article.append(head);
+
+      const claims = document.createElement("div");
+      claims.className = "claims";
+      for (const [key, name] of [["source_a", "Source A"], ["source_b", "Source B"]]) {
+        const claim = item[key] || {};
+        const box = document.createElement("div");
+        box.className = "claim";
+        const label = document.createElement("div");
+        label.className = "claim-label";
+        label.textContent = name;
+        const value = document.createElement("div");
+        value.className = "claim-value";
+        value.textContent = safeText(claim.value);
+        box.append(label, value);
+        claims.append(box);
+      }
+      article.append(claims);
+
+      const evidenceClaims = [["source_a", "Source A"], ["source_b", "Source B"]]
+        .map(([key, name]) => ({ name, evidence: item[key]?.evidence?.quote }))
+        .filter(entry => entry.evidence);
+      if (evidenceClaims.length) {
+        const evidence = document.createElement("details");
+        evidence.className = "evidence-details";
+        const toggle = document.createElement("summary");
+        toggle.className = "evidence-toggle";
+        toggle.textContent = "View source evidence";
+        const grid = document.createElement("div");
+        grid.className = "evidence-grid";
+        for (const entry of evidenceClaims) {
+          const wrap = document.createElement("div");
+          wrap.className = "evidence-item";
+          const label = document.createElement("div");
+          label.className = "claim-label";
+          label.textContent = entry.name + " · quoted text";
+          const quote = document.createElement("blockquote");
+          quote.textContent = "\"" + entry.evidence + "\"";
+          wrap.append(label, quote);
+          grid.append(wrap);
+        }
+        evidence.append(toggle, grid);
+        article.append(evidence);
+      }
+
+      if (!compact && item.status !== "match") {
+        const next = document.createElement("p");
+        next.className = "next";
+        next.textContent = "Suggested next step: " + (item.next_step || "Review the original sources.");
+        article.append(next);
+      }
+      return article;
+    }
+
     function renderFindings(findings) {
       const counts = { match: 0, conflict: 0, partial_mismatch: 0, not_found: 0 };
+      const attentionItems = [];
+      const matches = [];
       $("findings").replaceChildren();
 
       for (const item of findings) {
         counts[item.status] = (counts[item.status] || 0) + 1;
-        const article = document.createElement("article");
-        article.className = "finding";
-
-        const head = document.createElement("div");
-        head.className = "finding-head";
-        const title = document.createElement("h3");
-        title.textContent = labels[item.field] || item.field.replaceAll("_", " ");
-        const pill = document.createElement("span");
-        pill.className = "status-pill " + item.status;
-        pill.textContent = ({
-          match: "MATCH",
-          conflict: "CONFLICT - VERIFY",
-          partial_mismatch: "SCOPE DIFFERS",
-          not_found: "MISSING INFORMATION"
-        })[item.status] || item.status.toUpperCase();
-        head.append(title, pill);
-        article.append(head);
-
-        const claims = document.createElement("div");
-        claims.className = "claims";
-
-        for (const [key, name] of [["source_a", "Source A"], ["source_b", "Source B"]]) {
-          const claim = item[key] || {};
-          const box = document.createElement("div");
-          box.className = "claim";
-          const label = document.createElement("div");
-          label.className = "claim-label";
-          label.textContent = name;
-          const value = document.createElement("div");
-          value.className = "claim-value";
-          value.textContent = safeText(claim.value);
-          box.append(label, value);
-
-          if (claim.evidence && claim.evidence.quote) {
-            const quoteLabel = document.createElement("div");
-            quoteLabel.className = "claim-label";
-            quoteLabel.textContent = "Evidence from source";
-            const quote = document.createElement("blockquote");
-            quote.textContent = "\"" + claim.evidence.quote + "\"";
-            box.append(quoteLabel, quote);
-          }
-          claims.append(box);
-        }
-        article.append(claims);
-
-        const next = document.createElement("p");
-        next.className = "next";
-        next.textContent = "Next step: " + (item.next_step || "Review the original sources.");
-        article.append(next);
-        $("findings").append(article);
+        if (item.status === "match") matches.push(item);
+        else attentionItems.push(item);
       }
 
-      $("summary").textContent =
-        `${counts.match} matches | ${counts.conflict} conflicts | ` +
-        `${counts.partial_mismatch} scope differences | ${counts.not_found} missing`;
+      $("summary").textContent = attentionItems.length
+        ? `${attentionItems.length} detail${attentionItems.length === 1 ? "" : "s"} need${attentionItems.length === 1 ? "s" : ""} your attention.`
+        : "No differences were detected in the fields compared.";
+
+      const overview = document.createElement("div");
+      overview.className = "result-overview";
+      const count = document.createElement("div");
+      count.className = "overview-count";
+      const number = document.createElement("strong");
+      number.textContent = String(attentionItems.length);
+      const label = document.createElement("span");
+      label.textContent = attentionItems.length === 1 ? "detail to verify" : "details to verify";
+      count.append(number, label);
+      const note = document.createElement("div");
+      note.className = "overview-note";
+      note.textContent = `${counts.match} of ${findings.length} fields match`;
+      overview.append(count, note);
+      $("findings").append(overview);
+
+      if (attentionItems.length) {
+        const attentionLabel = document.createElement("div");
+        attentionLabel.className = "section-label";
+        attentionLabel.textContent = "Needs your attention";
+        $("findings").append(attentionLabel);
+        for (const item of attentionItems) $("findings").append(createFinding(item));
+      } else {
+        const allClear = document.createElement("div");
+        allClear.className = "all-clear";
+        allClear.textContent = "No discrepancies found in the fields compared. Still verify critical details with the organizer before applying.";
+        $("findings").append(allClear);
+      }
+
+      if (matches.length) {
+        const details = document.createElement("details");
+        details.className = "matches-details";
+        const summary = document.createElement("summary");
+        summary.textContent = `Everything else matches · ${matches.length} field${matches.length === 1 ? "" : "s"}`;
+        const list = document.createElement("div");
+        list.className = "matches-list";
+        for (const item of matches) list.append(createFinding(item, true));
+        details.append(summary, list);
+        $("findings").append(details);
+      }
+
       $("results").style.display = "block";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
     }
