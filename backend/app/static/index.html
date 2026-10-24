@@ -144,7 +144,106 @@ textarea:focus {
     margin-top: 12px;
 }
 
-</style>
+
+    /* Card-focused comparison report */
+    #results { scroll-margin-top: 22px; }
+    .results-top { margin-bottom: 18px; }
+    .results-top > div {
+      width: 100%;
+      padding: 22px 24px;
+      border: 1px solid #3a4033;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #1b2018 0%, #151813 100%);
+      box-shadow: 0 12px 32px rgba(0,0,0,.16);
+    }
+    .results-top h2 { margin-top: 5px; letter-spacing: -.7px; }
+    .results-top p { margin-top: 7px; }
+    .notice {
+      padding: 11px 15px;
+      border-color: #34392f;
+      background: #141612;
+      border-radius: 10px;
+    }
+    .result-overview {
+      padding: 18px 22px;
+      margin: 0 0 22px;
+      border: 1px solid #414b30;
+      border-radius: 16px;
+      background: linear-gradient(120deg, #202719 0%, #171a14 76%);
+      box-shadow: 0 10px 26px rgba(0,0,0,.18);
+    }
+    .overview-count { gap: 12px; }
+    .overview-count strong { font-size: 40px; }
+    .overview-note {
+      padding: 7px 11px;
+      border: 1px solid #34392f;
+      border-radius: 9px;
+      background: rgba(16,18,15,.5);
+    }
+    .section-label { margin: 24px 2px 12px; }
+    .findings { gap: 14px; }
+    .finding {
+      padding: 20px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #1d211b 0%, #171a15 100%);
+      box-shadow: 0 9px 24px rgba(0,0,0,.15);
+      transition: border-color .18s ease, transform .18s ease;
+    }
+    .finding.attention { border-color: #66552c; }
+    .finding.attention:hover { border-color: #8a7136; }
+    .finding-head { align-items: flex-start; }
+    .finding h3 { font-size: 16px; line-height: 1.45; letter-spacing: -.2px; }
+    .status-pill {
+      padding: 5px 10px;
+      letter-spacing: .2px;
+      border: 1px solid transparent;
+    }
+    .conflict, .partial_mismatch { border-color: #5a4925; }
+    .claims { gap: 12px; margin-top: 16px; }
+    .claim {
+      padding: 14px;
+      border-color: #343a30;
+      border-radius: 11px;
+      background: rgba(12,14,11,.35);
+    }
+    .claim-label { font-size: 10px; font-weight: 750; letter-spacing: 1.2px; }
+    .claim-value { margin: 7px 0 0; font-size: 14px; line-height: 1.55; }
+    .evidence-details { margin-top: 13px; }
+    .evidence-toggle { margin-top: 0; padding: 3px 0; font-weight: 700; }
+    .evidence-grid { padding: 10px 12px 2px; border-left: 1px solid #3d4532; margin-top: 7px; }
+    .evidence-item blockquote { margin: 7px 0 10px; line-height: 1.6; }
+    .next {
+      margin-top: 15px;
+      padding: 11px 13px;
+      border-radius: 9px;
+      border: 1px solid #373d30;
+      background: rgba(12,14,11,.28);
+      line-height: 1.6;
+    }
+    .matches-details {
+      overflow: hidden;
+      border-radius: 14px;
+      background: #151813;
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    }
+    .matches-details > summary { padding: 16px 18px; }
+    .matches-list { padding: 0 12px 12px; }
+    .matches-list .finding { box-shadow: none; }
+    .all-clear {
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    }
+    @media (max-width: 680px) {
+      .results-top > div { padding: 18px; }
+      .result-overview { padding: 16px; }
+      .finding { padding: 16px; }
+      .finding-head { flex-direction: column; align-items: flex-start; }
+      .claims, .evidence-grid { grid-template-columns: 1fr; }
+      .overview-count strong { font-size: 34px; }
+    }
+
+  </style>
 </head>
 <body>
   <main class="shell">
