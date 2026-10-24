@@ -111,3 +111,46 @@ def test_finding_preserves_evidence_quotes():
 
     assert finding["source_a"]["evidence"]["quote"] == "Submit the online form"
     assert finding["source_b"]["evidence"]["quote"] == "Submit the online form"
+
+
+def test_equivalent_deadline_formats_are_a_match():
+    a = make_source({
+        "application_deadline": "November 10, 2026"
+    })
+    b = make_source({
+        "application_deadline": "10 November 2026"
+    })
+
+    finding = finding_for(
+        compare_sources(a, b),
+        "application_deadline",
+    )
+
+    assert finding["status"] == "match"
+
+
+def test_iso_and_month_name_deadlines_are_a_match():
+    a = make_source({"application_deadline": "2026-11-10"})
+    b = make_source({"application_deadline": "November 10, 2026"})
+
+    finding = finding_for(compare_sources(a, b), "application_deadline")
+
+    assert finding["status"] == "match"
+
+
+def test_abbreviated_month_deadlines_are_a_match():
+    a = make_source({"application_deadline": "Nov 10, 2026"})
+    b = make_source({"application_deadline": "10 Nov 2026"})
+
+    finding = finding_for(compare_sources(a, b), "application_deadline")
+
+    assert finding["status"] == "match"
+
+
+def test_different_normalized_deadlines_remain_a_conflict():
+    a = make_source({"application_deadline": "November 10, 2026"})
+    b = make_source({"application_deadline": "2026-11-15"})
+
+    finding = finding_for(compare_sources(a, b), "application_deadline")
+
+    assert finding["status"] == "conflict"

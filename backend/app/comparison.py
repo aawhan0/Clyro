@@ -1,6 +1,7 @@
 """Deterministic, evidence-preserving comparison for two opportunity sources."""
 
 import re
+from datetime import datetime
 from typing import Any
 
 from app.schemas import FieldClaim, OpportunitySource
@@ -18,6 +19,28 @@ FIELD_NAMES = (
 def _normalize(value: str) -> str:
     """Normalize casing and whitespace only; do not infer semantic equivalence."""
     return " ".join(value.casefold().split())
+
+
+def _normalize_deadline(value: str) -> str:
+    """Normalize recognized, unambiguous deadline dates to ISO format."""
+    normalized = _normalize(value)
+
+    date_formats = (
+        "%B %d, %Y",
+        "%d %B %Y",
+        "%b %d, %Y",
+        "%d %b %Y",
+        "%Y-%m-%d",
+    )
+
+    for date_format in date_formats:
+        try:
+            parsed = datetime.strptime(normalized, date_format)
+            return parsed.date().isoformat()
+        except ValueError:
+            continue
+
+    return normalized
 
 
 def _tokens(value: str) -> set[str]:
@@ -57,7 +80,11 @@ def _compare_claims(field_name: str, a: FieldClaim, b: FieldClaim) -> dict[str, 
         status = "not_found"
         if len(missing_from) == 2:
             missing_from = ["both"]
-    elif _normalize(a.value) == _normalize(b.value):
+    elif (
+        _normalize_deadline(a.value) == _normalize_deadline(b.value)
+        if field_name == "application_deadline"
+        else _normalize(a.value) == _normalize(b.value)
+    ):
         status = "match"
     elif field_name == "eligibility_requirements":
         tokens_a, tokens_b = _tokens(a.value), _tokens(b.value)
