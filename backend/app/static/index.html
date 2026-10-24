@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10120f">
-  <title>Clyro ? Know before you apply</title>
+  <title>Clyro - Know before you apply</title>
   <style>
     :root {
       color-scheme: dark;
@@ -89,13 +89,13 @@
   <main class="shell">
     <header>
       <div class="brand">clyro<span>.</span></div>
-      <div class="badge">EARLY ACCESS ? MVP</div>
+      <div class="badge">EARLY ACCESS / MVP</div>
     </header>
 
     <section class="hero">
       <div class="eyebrow">Opportunity clarity, not guesswork</div>
       <h1>Know before<br>you <span>apply.</span></h1>
-      <p>Compare two announcements for the same opportunity. Spot conflicting deadlines, eligibility rules and missing details?with source evidence to help you decide what to verify.</p>
+      <p>Compare two announcements for the same opportunity. Spot conflicting deadlines, eligibility rules and missing details, with source evidence to help you decide what to verify.</p>
     </section>
 
     <section aria-label="Source inputs">
@@ -110,7 +110,7 @@
         </article>
       </div>
       <div class="actions">
-        <button class="primary" id="compareBtn">Compare sources ?</button>
+        <button class="primary" id="compareBtn">Compare sources</button>
         <button class="secondary" id="demoBtn">Load demo example</button>
         <span class="status" id="status" role="status" aria-live="polite">Your sources are compared by field, not ranked.</span>
       </div>
@@ -120,11 +120,11 @@
       <div class="results-top">
         <div><div class="eyebrow">Comparison report</div><h2>What needs your attention?</h2><p id="summary"></p></div>
       </div>
-      <div class="notice">Clyro reports differences in the supplied text. A conflict is a reason to verify?not proof of fraud or evidence that either source is correct.</div>
+      <div class="notice">Clyro reports differences in the supplied text. A conflict is a reason to verify - not proof of fraud or evidence that either source is correct.</div>
       <div class="findings" id="findings"></div>
     </section>
 
-    <footer>Clyro ? Know before you apply. Verify important details with the opportunity organizer before taking action.</footer>
+    <footer>Clyro - Know before you apply. Verify important details with the opportunity organizer before taking action.</footer>
   </main>
   <script>
     const $ = id => document.getElementById(id);
@@ -166,7 +166,7 @@
         pill.className = "status-pill " + item.status;
         pill.textContent = ({
           match: "MATCH",
-          conflict: "CONFLICT ? VERIFY",
+          conflict: "CONFLICT - VERIFY",
           partial_mismatch: "SCOPE DIFFERS",
           not_found: "MISSING INFORMATION"
         })[item.status] || item.status.toUpperCase();
@@ -193,7 +193,7 @@
             quoteLabel.className = "claim-label";
             quoteLabel.textContent = "Evidence from source";
             const quote = document.createElement("blockquote");
-            quote.textContent = "?" + claim.evidence.quote + "?";
+            quote.textContent = "\"" + claim.evidence.quote + "\"";
             box.append(quoteLabel, quote);
           }
           claims.append(box);
@@ -208,8 +208,8 @@
       }
 
       $("summary").textContent =
-        `${counts.match} matches ? ${counts.conflict} conflicts ? ` +
-        `${counts.partial_mismatch} scope differences ? ${counts.not_found} missing`;
+        `${counts.match} matches | ${counts.conflict} conflicts | ` +
+        `${counts.partial_mismatch} scope differences | ${counts.not_found} missing`;
       $("results").style.display = "block";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -226,7 +226,7 @@
 
       const button = $("compareBtn");
       button.disabled = true;
-      button.textContent = "Comparing?";
+      button.textContent = "Comparing...";
       $("status").className = "status";
       $("status").textContent = "Extracting and comparing both sources. This can take a little while.";
       $("results").style.display = "none";
@@ -254,9 +254,43 @@
           "Could not complete the comparison. Check the backend and try again.";
       } finally {
         button.disabled = false;
-        button.textContent = "Compare sources ?";
+        button.textContent = "Compare sources";
       }
     });
   </script>
 </body>
 </html>
+
+/* Clyro readability polish */
+textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 190px;
+    padding: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    font-family: inherit;
+    font-size: 14px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    resize: vertical;
+    tab-size: 2;
+}
+
+textarea::placeholder {
+    line-height: 1.7;
+    opacity: 0.65;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.source-card {
+    padding: 20px;
+}
+
+.source-card textarea {
+    display: block;
+    margin-top: 12px;
+}
