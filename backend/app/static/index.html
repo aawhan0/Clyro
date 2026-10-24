@@ -488,6 +488,56 @@ textarea:focus {
       .value-item { padding:13px 14px; }
     }
 
+  
+    /* Clear section rhythm: separate the workflow from supporting product context. */
+    .shell { max-width: 1160px; padding: 26px 28px 42px; }
+    .hero-with-art { padding: 38px 0 28px; }
+    .source-grid { gap: 18px; }
+    .source-grid .card { padding: 18px; }
+    .source-grid textarea { min-height: 150px; }
+    .actions { margin: 14px 0 0; padding-bottom: 24px; gap: 10px; }
+    #emptyState {
+      display:flex; align-items:center; justify-content:space-between; gap:24px;
+      margin: 0; padding: 20px 22px;
+      border:1px solid #30372b; border-radius:14px;
+      background:#171a15;
+    }
+    .empty-state-copy { max-width:440px; }
+    .empty-state-copy p { margin:7px 0 0; color:var(--muted); font-size:13px; }
+    .empty-state-fields { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:8px; }
+    .empty-state-fields span {
+      padding:7px 10px; border:1px solid #34392f; border-radius:8px;
+      background:#11130f; color:#c3c9b8; font-size:11px;
+    }
+    .value-section {
+      margin-top:26px; padding:24px 22px 22px;
+      border:1px solid #30372b; border-radius:16px;
+      background:linear-gradient(135deg,#181c16 0%,#131510 100%);
+    }
+    .value-heading { display:flex; justify-content:space-between; align-items:end; gap:28px; margin-bottom:17px; }
+    .value-heading h2 { margin-top:5px; font-size:23px; letter-spacing:-.6px; }
+    .value-heading > p { max-width:390px; margin:0; color:var(--muted); font-size:13px; line-height:1.6; }
+    .value-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .value-item { min-width:0; padding:17px; border:1px solid #34392f; border-radius:11px; background:#11130f; }
+    .value-item strong { display:block; margin:7px 0 5px; font-size:14px; }
+    .value-item p { margin:0; color:var(--muted); font-size:12px; line-height:1.65; }
+    .value-number { display:block; margin-bottom:8px; color:var(--lime); font-size:10px; font-weight:800; letter-spacing:1px; }
+    #results { margin-top:28px; padding-top:24px; border-top:1px solid #30372b; }
+    #results .results-top { margin-bottom:12px; }
+    #results .notice { margin-bottom:14px; }
+    #results .comparison-card { margin-top:0; }
+    footer { margin-top:26px; padding-top:15px; }
+    @media(max-width:760px) {
+      .shell { padding:20px 16px 30px; }
+      .hero-with-art { padding:34px 0 22px; }
+      #emptyState { align-items:flex-start; flex-direction:column; gap:14px; padding:17px; }
+      .empty-state-fields { justify-content:flex-start; }
+      .value-section { margin-top:20px; padding:18px; }
+      .value-heading { align-items:flex-start; flex-direction:column; gap:8px; }
+      .value-grid { grid-template-columns:1fr; }
+      #results { margin-top:22px; padding-top:20px; }
+    }
+
   </style>
 </head>
 <body>
