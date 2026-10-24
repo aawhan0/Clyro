@@ -3,7 +3,7 @@ services:
     name: clyro
     runtime: python
     plan: free
-    branch: feat/opportunity-source-schema
+    branch: main
     buildCommand: pip install -r backend/requirements.txt
     startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT --app-dir .
     healthCheckPath: /health
