@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>Saved opportunities · Clyro</title>
+  <style>
+    :root { color-scheme:dark; --bg:#10120f; --panel:#191c18; --border:#34392f; --text:#f4f3e9; --muted:#a8ad9e; --lime:#d4f477; --yellow:#f4d887; --green:#b9efb0; --red:#ff9c91; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.6 Inter,ui-sans-serif,system-ui,sans-serif; }
+    a,button,input { font:inherit; }
+    .shell { max-width:920px; margin:auto; padding:28px 22px 64px; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:16px; padding-bottom:18px; border-bottom:1px solid var(--border); }
+    .brand { color:var(--text); text-decoration:none; font-size:25px; font-weight:850; letter-spacing:-1px; }
+    .brand span { color:var(--lime); }
+    .back { color:var(--text); text-decoration:none; border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:12px; font-weight:750; }
+    .back:hover { color:var(--lime); border-color:var(--lime); }
+    .intro { padding:48px 0 24px; }
+    .eyebrow { color:var(--lime); text-transform:uppercase; font-size:11px; font-weight:800; letter-spacing:2px; }
+    h1 { margin:8px 0; font-size:clamp(34px,6vw,52px); line-height:1.08; letter-spacing:-2px; }
+    .intro p { margin:10px 0 0; color:var(--muted); max-width:590px; }
+    .toolbar { display:flex; gap:10px; margin:8px 0 18px; }
+    input,select { min-width:0; padding:11px 12px; border:1px solid var(--border); border-radius:9px; background:#11130f; color:var(--text); }
+    input { flex:1; }
+    input:focus,select:focus { outline:1px solid var(--lime); border-color:var(--lime); }
+    .summary { display:flex; justify-content:space-between; gap:12px; margin:0 0 12px; color:var(--muted); font-size:12px; }
+    .list { display:grid; gap:10px; }
+    .record { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:17px; border:1px solid var(--border); border-radius:13px; background:linear-gradient(145deg,#1b1e19,#151713); }
+    .record-main { min-width:0; }
+    .record h2 { margin:0 0 5px; font-size:16px; overflow-wrap:anywhere; }
+    .meta { margin:0; color:var(--muted); font-size:12px; line-height:1.7; }
+    .pill { display:inline-block; margin-top:9px; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; background:#38301b; color:var(--yellow); }
+    .pill.clear { background:#203221; color:var(--green); }
+    .actions { display:flex; flex-shrink:0; gap:8px; }
+    button { cursor:pointer; border-radius:8px; padding:9px 12px; font-size:12px; font-weight:800; }
+    .primary { border:0; background:var(--lime); color:#16190f; }
+    .secondary { border:1px solid var(--border); background:transparent; color:var(--text); }
+    .secondary:hover { border-color:var(--red); color:var(--red); }
+    .empty { padding:30px 20px; border:1px dashed #41483a; border-radius:13px; text-align:center; color:var(--muted); }
+    .empty strong { display:block; color:var(--text); font-size:15px; margin-bottom:4px; }
+    footer { margin-top:40px; border-top:1px solid var(--border); padding-top:16px; color:var(--muted); font-size:11px; }
+    @media(max-width:620px) { .shell { padding:20px 14px 42px; } .intro { padding-top:38px; } .toolbar { flex-direction:column; } .record { align-items:stretch; flex-direction:column; gap:12px; } .actions button { flex:1; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <a class="brand" href="/"><span style="color:var(--text)">clyro</span><span>.</span></a>
+      <a class="back" href="/">← Back to compare</a>
+    </header>
+    <section class="intro">
+      <div class="eyebrow">Your workspace</div>
+      <h1>Saved opportunities</h1>
+      <p>Pick up where you left off. Your comparisons and verification checklists are saved in this browser only.</p>
+    </section>
+    <section aria-label="Saved comparisons">
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search saved opportunities…" aria-label="Search saved opportunities">
+        <select id="filter" aria-label="Filter saved opportunities">
+          <option value="all">All comparisons</option>
+          <option value="review">Needs review</option>
+          <option value="clear">No flagged differences</option>
+        </select>
+      </div>
+      <div class="summary"><span id="count">0 saved</span><span id="scope">Stored on this device</span></div>
+      <div class="list" id="list"></div>
+      <div class="empty" id="empty" hidden><strong id="emptyTitle">Nothing saved yet</strong><span id="emptyCopy">Run a comparison and choose “Save comparison” to keep it here.</span><p><a class="back" href="/">Compare two sources</a></p></div>
+    </section>
+    <footer>© 2026 Clyro · Differences are prompts to verify, not proof that either source is correct.</footer>
+  </main>
+  <script>
+    const STORAGE_KEY = "clyro.savedComparisons.v1";
+    const $ = id => document.getElementById(id);
+    function loadRecords() {
+      try {
+        const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(value) ? value.filter(item => item && typeof item.id === "string") : [];
+      } catch (_) { return []; }
+    }
+    function render() {
+      const query = $("search").value.trim().toLowerCase();
+      const filter = $("filter").value;
+      const all = loadRecords().sort((a,b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+      const records = all.filter(record => {
+        const findings = Array.isArray(record.findings) ? record.findings : [];
+        const needsReview = findings.some(item => item.status !== "match");
+        const matchesQuery = [record.title, record.sourceAName, record.sourceBName, record.sourceA, record.sourceB].join(" ").toLowerCase().includes(query);
+        return matchesQuery && (filter === "all" || (filter === "review" && needsReview) || (filter === "clear" && !needsReview));
+      });
+      $("count").textContent = records.length + " of " + all.length + " saved";
+      $("list").replaceChildren();
+      $("empty").hidden = records.length > 0;
+      $("emptyTitle").textContent = all.length ? "No matching opportunities" : "Nothing saved yet";
+      $("emptyCopy").textContent = all.length ? "Try a different search or filter." : "Run a comparison and choose “Save comparison” to keep it here.";
+      for (const record of records) {
+        const findings = Array.isArray(record.findings) ? record.findings : [];
+        const attention = findings.filter(item => item.status !== "match").length;
+        const checked = Object.values(record.checklist || {}).filter(Boolean).length;
+        const date = new Date(record.updatedAt || record.createdAt);
+        const dateLabel = Number.isNaN(date.getTime()) ? "Saved comparison" : "Updated " + date.toLocaleDateString();
+        const card = document.createElement("article");
+        card.className = "record";
+        const main = document.createElement("div");
+        main.className = "record-main";
+        const title = document.createElement("h2");
+        title.textContent = record.title || "Untitled opportunity";
+        const meta = document.createElement("p");
+        meta.className = "meta";
+        meta.textContent = dateLabel + " · " + attention + " detail" + (attention === 1 ? "" : "s") + " to review · " + checked + "/5 checklist items checked";
+        const pill = document.createElement("span");
+        pill.className = "pill" + (attention ? "" : " clear");
+        pill.textContent = attention ? "VERIFY DETAILS" : "NO DIFFERENCES FLAGGED";
+        main.append(title, meta, pill);
+        const actions = document.createElement("div");
+        actions.className = "actions";
+        const open = document.createElement("button");
+        open.className = "primary";
+        open.type = "button";
+        open.textContent = "Open comparison";
+        open.addEventListener("click", () => {
+          try { sessionStorage.setItem("clyro.openSavedComparison", JSON.stringify(record)); }
+          catch (_) { alert("Could not open this saved comparison. Please check browser storage settings."); return; }
+          window.location.href = "/?openSaved=1";
+        });
+        const remove = document.createElement("button");
+        remove.className = "secondary";
+        remove.type = "button";
+        remove.textContent = "Delete";
+        remove.addEventListener("click", () => {
+          if (!confirm('Delete "' + (record.title || "Untitled opportunity") + '" from this browser?')) return;
+          const remaining = loadRecords().filter(item => item.id !== record.id);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
+          render();
+        });
+        actions.append(open, remove);
+        card.append(main, actions);
+        $("list").append(card);
+      }
+    }
+    $("search").addEventListener("input", render);
+    $("filter").addEventListener("change", render);
+    window.addEventListener("storage", render);
+    render();
+  </script>
+</body>
+</html>
