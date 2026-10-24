@@ -37,6 +37,20 @@
     h1 span { color: var(--lime); }
     .hero p { color: var(--muted); max-width: 650px; font-size: 17px; }
     .source-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .source-meta { display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px; }
+    .source-meta input { width:100%; min-width:0; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:#11130f; color:var(--text); font:inherit; font-size:12px; }
+    .source-meta input:focus { outline:1px solid var(--lime); border-color:var(--lime); }
+    .source-provenance { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 12px; }
+    .source-provenance a,.source-provenance span { display:inline-block; max-width:100%; overflow-wrap:anywhere; padding:8px 11px; border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:12px; text-decoration:none; }
+    .readiness { margin-top:14px; padding:17px 19px; border:1px solid var(--border); border-radius:13px; background:#171a15; }
+    .readiness h3 { font-size:16px; }
+    .readiness p { color:var(--muted); font-size:12px; margin:5px 0 12px; }
+    .readiness-list { display:grid; gap:9px; }
+    .readiness-item { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--text); }
+    .readiness-item input { margin-top:4px; accent-color:var(--lime); }
+    .insight { margin:12px 0 0; padding:10px 12px; border-left:2px solid var(--yellow); border-radius:0 8px 8px 0; background:#191a14; color:#d3d0bf; font-size:12px; line-height:1.6; }
+    .decision-note { margin:0 0 12px; padding:13px 15px; border:1px solid #66552c; border-radius:10px; background:#211f16; color:#e8dfbd; font-size:12px; line-height:1.6; }
+    .decision-note strong { display:block; margin-bottom:3px; color:var(--yellow); font-size:12px; }
     .card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 20px; min-width: 0; }
     .card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
     h2, h3 { margin: 0; }
@@ -631,14 +645,71 @@ textarea:focus {
       .footer-brand-block { grid-column:auto; }
     }
 
+
+    /* Guided second-source discovery */
+    .source-discovery { margin-top:12px; padding:12px; border:1px solid #34392f; border-radius:10px; background:#11130f; }
+    .source-discovery-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .source-discovery-head strong { font-size:12px; }
+    .source-discovery-head button { flex-shrink:0; }
+    .source-discovery p { margin:6px 0 10px; color:var(--muted); font-size:11px; line-height:1.55; }
+    .source-discovery-controls { display:flex; gap:8px; flex-wrap:wrap; }
+    .source-discovery input { width:100%; min-width:0; padding:10px 11px; border:1px solid var(--border); border-radius:8px; background:#191c18; color:var(--text); font:inherit; font-size:12px; }
+    .source-discovery .secondary { padding:8px 11px; font-size:11px; }
+    .source-discovery .primary { padding:8px 11px; font-size:11px; }
+    .source-discovery-note { margin-top:9px !important; margin-bottom:0 !important; }
+
+    /* Saved opportunity workspace — browser-local MVP */
+    .header-actions { display:flex; align-items:center; gap:10px; }
+    .saved-count { display:inline-grid; place-items:center; min-width:20px; height:20px; margin-left:6px; padding:0 5px; border-radius:999px; background:#2a341d; color:var(--lime); font-size:10px; }
+    .opportunity-name { margin:0 0 16px; padding:13px 15px; border:1px solid var(--border); border-radius:10px; background:#151713; }
+    .opportunity-name label { display:block; margin-bottom:6px; color:var(--muted); font-size:11px; font-weight:800; letter-spacing:.7px; }
+    .opportunity-name input { width:100%; padding:10px 11px; border:1px solid var(--border); border-radius:7px; background:#11130f; color:var(--text); font:inherit; font-size:13px; }
+    .opportunity-name input:focus { outline:1px solid var(--lime); border-color:var(--lime); }
+    .result-actions { display:flex; justify-content:flex-end; gap:8px; margin:0 0 12px; }
+    .saved-dashboard { margin:18px 0 24px; padding:20px; border:1px solid #3b4232; border-radius:14px; background:linear-gradient(145deg,#1a1e17,#141612); }
+    .saved-dashboard-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:15px; }
+    .saved-dashboard-head h2 { margin:4px 0; font-size:22px; }
+    .saved-dashboard-head p,.saved-empty { margin:0; color:var(--muted); font-size:12px; }
+    .saved-list { display:grid; gap:10px; }
+    .saved-record { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px; border:1px solid var(--border); border-radius:10px; background:#11130f; }
+    .saved-record-main { min-width:0; }
+    .saved-record-title { margin:0 0 5px; font-size:14px; font-weight:800; overflow-wrap:anywhere; }
+    .saved-record-meta { margin:0; color:var(--muted); font-size:11px; line-height:1.6; }
+    .saved-record-actions { display:flex; flex-shrink:0; flex-wrap:wrap; gap:7px; }
+    .saved-record-actions button { padding:7px 10px; font-size:11px; }
+    .saved-empty { padding:18px 0 5px; }
+    @media(max-width:680px) {
+      .header-actions { align-items:flex-end; flex-direction:column; gap:7px; }
+      .saved-dashboard { padding:15px; }
+      .saved-record { align-items:flex-start; flex-direction:column; }
+      .saved-record-actions { width:100%; }
+      .result-actions { justify-content:flex-start; }
+    }
+
   </style>
 </head>
 <body>
   <main class="shell">
     <header>
       <div class="brand">clyro<span>.</span></div>
-      <div class="badge">EARLY ACCESS / MVP</div>
+      <div class="header-actions">
+        <button class="secondary" type="button" id="savedBtn">Saved opportunities <span class="saved-count" id="savedCount">0</span></button>
+        <div class="badge">EARLY ACCESS / MVP</div>
+      </div>
     </header>
+
+    <section id="savedDashboard" class="saved-dashboard" hidden aria-label="Saved opportunities">
+      <div class="saved-dashboard-head">
+        <div>
+          <div class="eyebrow">YOUR WORKSPACE</div>
+          <h2>Saved opportunities</h2>
+          <p>Reopen a comparison and continue your verification checklist in this browser.</p>
+        </div>
+        <button class="secondary" type="button" id="closeSavedBtn">Close</button>
+      </div>
+      <div id="savedList" class="saved-list"></div>
+      <p id="savedEmpty" class="saved-empty">Nothing saved yet. Run a comparison, then choose “Save comparison”.</p>
+    </section>
 
     <section class="hero hero-with-art">
       <div class="hero-copy">
@@ -679,6 +750,10 @@ textarea:focus {
         </div>
         <span class="step-tag">2 texts · 1 clear comparison</span>
       </div>
+      <div class="opportunity-name">
+        <label for="opportunityName">OPPORTUNITY NAME <span style="font-weight:400;letter-spacing:0">(optional, helps you find it later)</span></label>
+        <input id="opportunityName" type="text" maxlength="160" placeholder="e.g. AI Research Internship">
+      </div>
       <div class="source-grid">
         <article class="card source-card">
           <div class="card-head">
@@ -687,6 +762,10 @@ textarea:focus {
           </div>
           <textarea id="sourceA" maxlength="30000" aria-label="Announcement you found" placeholder="Paste the opportunity announcement here..."></textarea>
           <p class="input-helper">The post, forwarded message, or listing that caught your eye.</p>
+          <div class="source-meta">
+            <input id="sourceAName" type="text" maxlength="80" placeholder="Source label (e.g. LinkedIn post)" aria-label="Source A label">
+            <input id="sourceAUrl" type="url" maxlength="500" placeholder="Source URL (optional)" aria-label="Source A URL">
+          </div>
         </article>
         <article class="card source-card">
           <div class="card-head">
@@ -695,6 +774,26 @@ textarea:focus {
           </div>
           <textarea id="sourceB" maxlength="30000" aria-label="Details you are checking against" placeholder="Paste the website or second announcement here..."></textarea>
           <p class="input-helper">A second version to compare against. It doesn't have to be official.</p>
+          <div class="source-meta">
+            <input id="sourceBName" type="text" maxlength="80" placeholder="Source label (e.g. organizer website)" aria-label="Source B label">
+            <input id="sourceBUrl" type="url" maxlength="500" placeholder="Source URL (optional)" aria-label="Source B URL">
+          </div>
+          <div class="source-discovery" aria-label="Find a second source">
+            <div class="source-discovery-head">
+              <strong>Not sure where to find the second source?</strong>
+              <button class="secondary" type="button" id="guideSourceBtn">Help me find it</button>
+            </div>
+            <div id="sourceGuidePanel" hidden>
+              <p>Use the first announcement to build a search. Look for the same role and organizer, open a relevant result, then copy its details into the box above.</p>
+              <label class="hint" for="sourceSearchQuery">Suggested search (you can edit this)</label>
+              <input id="sourceSearchQuery" type="text" autocomplete="off" placeholder="Opportunity name + organizer + official application">
+              <div class="source-discovery-controls" style="margin-top:9px">
+                <button class="primary" type="button" id="searchSourceBtn">Search the web ↗</button>
+                <button class="secondary" type="button" id="refreshSourceQueryBtn">Refresh suggestion</button>
+              </div>
+              <p class="source-discovery-note">Check that the result is for the same opportunity and current cycle. Search results aren't proof that a page is official. Clyro doesn't fetch pages automatically yet—copy the relevant text and paste it into this source box.</p>
+            </div>
+          </div>
         </article>
       </div>
       <div class="actions">
@@ -738,6 +837,7 @@ textarea:focus {
         <div><div class="eyebrow">Comparison report</div><h2>What needs your attention?</h2><p id="summary"></p></div>
       </div>
       <div class="notice">Clyro reports differences in the supplied text. A conflict is a reason to verify - not proof of fraud or evidence that either source is correct.</div>
+      <div class="result-actions"><button class="primary" type="button" id="saveComparisonBtn">Save comparison</button></div>
       <div class="findings" id="findings"></div>
     </section>
 
@@ -779,13 +879,182 @@ textarea:focus {
       location_or_participation_mode: "Location & participation",
       application_method: "Application method"
     };
+    const STORAGE_KEY = "clyro.savedComparisons.v1";
+    let activeSavedId = null;
+    let latestFindings = null;
+
+    function loadSavedRecords() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed.filter(item => item && typeof item.id === "string") : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function writeSavedRecords(records) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        updateSavedCount(records.length);
+        return true;
+      } catch (_) {
+        $("status").className = "status error";
+        $("status").textContent = "Could not save in this browser. Check available storage and try again.";
+        return false;
+      }
+    }
+
+    function updateSavedCount(count = loadSavedRecords().length) {
+      $("savedCount").textContent = String(count);
+    }
+
+    function currentChecklist() {
+      const state = {};
+      document.querySelectorAll(".readiness-item input[data-field]").forEach(input => {
+        state[input.dataset.field] = input.checked;
+      });
+      return state;
+    }
+
+    function persistActiveChecklist() {
+      if (!activeSavedId) return;
+      const records = loadSavedRecords();
+      const index = records.findIndex(item => item.id === activeSavedId);
+      if (index < 0) return;
+      records[index].checklist = currentChecklist();
+      records[index].updatedAt = new Date().toISOString();
+      writeSavedRecords(records);
+    }
+
+    function renderSavedDashboard() {
+      const records = loadSavedRecords().sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+      updateSavedCount(records.length);
+      const list = $("savedList");
+      list.replaceChildren();
+      $("savedEmpty").hidden = records.length > 0;
+
+      for (const record of records) {
+        const findings = Array.isArray(record.findings) ? record.findings : [];
+        const attention = findings.filter(item => item.status !== "match").length;
+        const completed = Object.values(record.checklist || {}).filter(Boolean).length;
+        const card = document.createElement("article");
+        card.className = "saved-record";
+
+        const main = document.createElement("div");
+        main.className = "saved-record-main";
+        const title = document.createElement("h3");
+        title.className = "saved-record-title";
+        title.textContent = record.title || "Untitled opportunity";
+        const meta = document.createElement("p");
+        meta.className = "saved-record-meta";
+        const date = new Date(record.updatedAt || record.createdAt);
+        const dateLabel = Number.isNaN(date.getTime()) ? "Saved comparison" : "Updated " + date.toLocaleDateString();
+        meta.textContent = dateLabel + " · " + attention + " detail" + (attention === 1 ? "" : "s") + " to review · " + completed + "/5 checklist items checked";
+        main.append(title, meta);
+
+        const actions = document.createElement("div");
+        actions.className = "saved-record-actions";
+        const open = document.createElement("button");
+        open.type = "button";
+        open.className = "primary";
+        open.textContent = "Open";
+        open.addEventListener("click", () => openSavedRecord(record.id));
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "secondary";
+        remove.textContent = "Delete";
+        remove.addEventListener("click", () => {
+          const remaining = loadSavedRecords().filter(item => item.id !== record.id);
+          if (writeSavedRecords(remaining)) {
+            if (activeSavedId === record.id) activeSavedId = null;
+            renderSavedDashboard();
+          }
+        });
+        actions.append(open, remove);
+        card.append(main, actions);
+        list.append(card);
+      }
+    }
+
+    function openSavedRecord(id) {
+      const record = loadSavedRecords().find(item => item.id === id);
+      if (!record) {
+        $("status").className = "status error";
+        $("status").textContent = "That saved comparison is no longer available in this browser.";
+        renderSavedDashboard();
+        return;
+      }
+      $("opportunityName").value = record.title || "";
+      $("sourceA").value = record.sourceA || "";
+      $("sourceB").value = record.sourceB || "";
+      $("sourceAName").value = record.sourceAName || "";
+      $("sourceBName").value = record.sourceBName || "";
+      $("sourceAUrl").value = record.sourceAUrl || "";
+      $("sourceBUrl").value = record.sourceBUrl || "";
+      activeSavedId = record.id;
+      $("savedDashboard").hidden = true;
+      renderFindings(record.findings || [], record.checklist || {});
+      $("status").className = "status";
+      $("status").textContent = "Saved comparison reopened. Checklist changes will be saved in this browser.";
+      $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function saveCurrentComparison() {
+      if (!Array.isArray(latestFindings)) {
+        $("status").className = "status error";
+        $("status").textContent = "Run a comparison before saving it.";
+        return;
+      }
+      const now = new Date().toISOString();
+      const title = $("opportunityName").value.trim()
+        || $("sourceAName").value.trim()
+        || ("Opportunity · " + new Date().toLocaleDateString());
+      const record = {
+        id: (globalThis.crypto && typeof crypto.randomUUID === "function")
+          ? crypto.randomUUID()
+          : ("clyro-" + Date.now() + "-" + Math.random().toString(36).slice(2, 9)),
+        title: title,
+        sourceA: $("sourceA").value,
+        sourceB: $("sourceB").value,
+        sourceAName: $("sourceAName").value.trim(),
+        sourceBName: $("sourceBName").value.trim(),
+        sourceAUrl: $("sourceAUrl").value.trim(),
+        sourceBUrl: $("sourceBUrl").value.trim(),
+        findings: latestFindings,
+        checklist: currentChecklist(),
+        createdAt: now,
+        updatedAt: now
+      };
+      const records = loadSavedRecords();
+      records.push(record);
+      if (writeSavedRecords(records)) {
+        activeSavedId = record.id;
+        $("status").className = "status";
+        $("status").textContent = "Comparison saved in this browser. You can reopen it from Saved opportunities.";
+        renderSavedDashboard();
+      }
+    }
+
+    $("savedBtn").addEventListener("click", () => {
+      renderSavedDashboard();
+      $("savedDashboard").hidden = !$("savedDashboard").hidden;
+      if (!$("savedDashboard").hidden) $("savedDashboard").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    $("closeSavedBtn").addEventListener("click", () => { $("savedDashboard").hidden = true; });
+    $("saveComparisonBtn").addEventListener("click", saveCurrentComparison);
+    updateSavedCount();
+
     const demoA = "Applications close on November 10, 2026. Open to undergraduate students. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
-    const demoB = "Applications close on November 15, 2026. Open to undergraduate students in computer science or data science. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
+    const demoB = "Applications close on November 15, 2026. Open to undergraduate students in computer science or data science. Stipend: INR 15,000 per month.";
 
     $("demoBtn").addEventListener("click", () => {
       $("sourceA").value = demoA;
       $("sourceB").value = demoB;
-      $("status").textContent = "Illustrative demo text loaded. Run Compare to analyze it.";
+      $("sourceAName").value = "Illustrative sample · Source A";
+      $("sourceBName").value = "Illustrative sample · Source B";
+      $("sourceAUrl").value = "";
+      $("sourceBUrl").value = "";
+      $("status").textContent = "Fictional example loaded: deadline conflict, eligibility difference, and details missing from Source B. Run Compare to see what needs verification.";
       $("results").style.display = "none";
       $("emptyState").style.display = "flex";
     });
@@ -865,7 +1134,8 @@ textarea:focus {
       return article;
     }
 
-    function renderFindings(findings) {
+    function renderFindings(findings, checklistState = {}) {
+      latestFindings = findings;
       const counts = { match: 0, conflict: 0, partial_mismatch: 0, not_found: 0 };
       const attentionItems = findings.filter(item => item.status !== "match");
       const matches = findings.filter(item => item.status === "match");
@@ -880,6 +1150,29 @@ textarea:focus {
       countLine.className = "table-summary";
       countLine.textContent = attentionItems.length ? `${attentionItems.length} detail${attentionItems.length === 1 ? "" : "s"} to verify · ${counts.match} of ${findings.length} fields match` : `All ${findings.length} compared fields match`;
       $("findings").append(countLine);
+
+      // Explain the practical implication without claiming either source is authoritative.
+      const decisionNote = document.createElement("aside");
+      decisionNote.className = "decision-note";
+      const decisionTitle = document.createElement("strong");
+      decisionTitle.textContent = "Why this matters";
+      const hasConflict = counts.conflict > 0;
+      const hasScopeDifference = counts.partial_mismatch > 0;
+      const hasMissing = counts.not_found > 0;
+      let decisionCopy;
+      if (hasConflict) {
+        decisionCopy = "At least one detail differs between the supplied sources. Relying on the wrong deadline or application detail could affect your next step. Verify the conflicting field with the organizer before acting.";
+      } else if (hasScopeDifference) {
+        decisionCopy = "The sources describe at least one requirement differently. Check the exact conditions before deciding whether the opportunity fits you.";
+      } else if (hasMissing) {
+        decisionCopy = "Some details are not stated clearly in both sources. Missing information is unresolved—not proof of a conflict—so check the original opportunity page before relying on an assumption.";
+      } else {
+        decisionCopy = "No differences were detected in the fields compared. That does not prove either source is current or correct; verify critical details before applying.";
+      }
+      const decisionText = document.createElement("span");
+      decisionText.textContent = decisionCopy;
+      decisionNote.append(decisionTitle, decisionText);
+      $("findings").append(decisionNote);
 
       const report = document.createElement("article");
       report.className = "comparison-card";
@@ -970,6 +1263,18 @@ textarea:focus {
           }
           row.append(extra);
         }
+        if (item.status !== "match") {
+          const insight = document.createElement("p");
+          insight.className = "insight";
+          const fieldName = labels[item.field] || item.field.replaceAll("_", " ");
+          const explanations = {
+            conflict: "Both sources state a value for this detail, but the values differ. Verify the current details with the opportunity organizer.",
+            partial_mismatch: "The sources describe this requirement differently. Check the exact eligibility or participation conditions before deciding.",
+            not_found: "At least one source does not provide enough information for this field. Missing information is not proof of a conflict."
+          };
+          insight.textContent = (explanations[item.status] || "Review both source statements.") + " Field: " + fieldName + ".";
+          row.append(insight);
+        }
         report.append(row);
       }
 
@@ -977,11 +1282,107 @@ textarea:focus {
       reportFoot.className = "comparison-footnote";
       reportFoot.textContent = "Differences are based only on the text provided. Verify critical details with the opportunity organizer.";
       report.append(reportFoot);
+      const provenance = document.createElement("div");
+      provenance.className = "source-provenance";
+      for (const [nameId, urlId, fallback] of [
+        ["sourceAName", "sourceAUrl", "Source A"],
+        ["sourceBName", "sourceBUrl", "Source B"]
+      ]) {
+        const label = $(nameId).value.trim() || fallback;
+        const rawUrl = $(urlId).value.trim();
+        let safeUrl = "";
+        try {
+          const parsed = new URL(rawUrl);
+          if (parsed.protocol === "http:" || parsed.protocol === "https:") safeUrl = parsed.href;
+        } catch (_) {}
+        const item = safeUrl ? document.createElement("a") : document.createElement("span");
+        item.textContent = label + (safeUrl ? " ↗" : "");
+        if (safeUrl) { item.href = safeUrl; item.target = "_blank"; item.rel = "noopener noreferrer"; }
+        provenance.append(item);
+      }
+      $("findings").prepend(provenance);
       $("findings").append(report);
+
+      const readiness = document.createElement("section");
+      readiness.className = "readiness";
+      const readinessTitle = document.createElement("h3");
+      readinessTitle.textContent = "Before you apply";
+      const readinessIntro = document.createElement("p");
+      readinessIntro.textContent = "Use this checklist to confirm the details that matter. Checked items are only suggestions based on this comparison.";
+      const readinessList = document.createElement("div");
+      readinessList.className = "readiness-list";
+      const checks = [
+        ["application_deadline", "Confirm the application deadline"],
+        ["eligibility_requirements", "Confirm you meet the eligibility requirements"],
+        ["stipend_or_prize", "Confirm stipend or prize details"],
+        ["location_or_participation_mode", "Confirm location and participation mode"],
+        ["application_method", "Confirm the correct application route"]
+      ];
+      for (const [field, text] of checks) {
+        const finding = findings.find(item => item.field === field);
+        const label = document.createElement("label");
+        label.className = "readiness-item";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.field = field;
+        checkbox.checked = Object.prototype.hasOwnProperty.call(checklistState, field)
+          ? Boolean(checklistState[field])
+          : Boolean(finding && finding.status === "match");
+        checkbox.addEventListener("change", persistActiveChecklist);
+        const copy = document.createElement("span");
+        copy.textContent = text + (finding && finding.status !== "match" ? " — verify" : "");
+        label.append(checkbox, copy);
+        readinessList.append(label);
+      }
+      readiness.append(readinessTitle, readinessIntro, readinessList);
+      $("findings").append(readiness);
       $("results").style.display = "block";
       $("emptyState").style.display = "none";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
+    function suggestedSourceQuery() {
+      const source = $("sourceA").value.trim();
+      if (!source) return "";
+      const cleaned = source
+        .replace(/https?:\/\/\S+/gi, " ")
+        .replace(/www\.\S+/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const excerpt = cleaned.split(" ").slice(0, 22).join(" ");
+      return (excerpt + " official application eligibility deadline").slice(0, 320).trim();
+    }
+
+    function refreshSourceQuery() {
+      const query = suggestedSourceQuery();
+      $("sourceSearchQuery").value = query;
+      if (!query) {
+        $("status").className = "status error";
+        $("status").textContent = "Paste the first announcement before generating a search.";
+        return false;
+      }
+      $("status").className = "status";
+      $("status").textContent = "Search suggestion ready. Review it, then open the web search.";
+      return true;
+    }
+
+    $("guideSourceBtn").addEventListener("click", () => {
+      const panel = $("sourceGuidePanel");
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) refreshSourceQuery();
+    });
+
+    $("refreshSourceQueryBtn").addEventListener("click", refreshSourceQuery);
+
+    $("searchSourceBtn").addEventListener("click", () => {
+      const query = $("sourceSearchQuery").value.trim();
+      if (!query) {
+        $("status").className = "status error";
+        $("status").textContent = "Add a search query first.";
+        return;
+      }
+      window.open("https://www.google.com/search?q=" + encodeURIComponent(query), "_blank", "noopener,noreferrer");
+    });
 
     $("compareBtn").addEventListener("click", async () => {
       const source_a = $("sourceA").value.trim();
@@ -1015,6 +1416,7 @@ textarea:focus {
           throw new Error("The API returned an unexpected response.");
         }
 
+        activeSavedId = null;
         renderFindings(data.findings);
         $("status").textContent = "Done. Check the differences below, then open the evidence if you want to see why a detail was flagged.";
       } catch (error) {
