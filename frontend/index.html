@@ -1186,12 +1186,7 @@ textarea:focus {
           const insight = document.createElement("p");
           insight.className = "insight";
           const fieldName = labels[item.field] || item.field.replaceAll("_", " ");
-          const explanations = {
-            conflict: "Both sources state a value for this detail, but the values differ. Verify the current details with the opportunity organizer.",
-            partial_mismatch: "The sources describe this requirement differently. Check the exact eligibility or participation conditions before deciding.",
-            not_found: "At least one source does not provide enough information for this field. Missing information is not proof of a conflict."
-          };
-          insight.textContent = (explanations[item.status] || "Review both source statements.") + " Field: " + fieldName + ".";
+          insight.textContent = (item.explanation || "Review both source statements.") + " Field: " + fieldName + ".";
           row.append(insight);
         }
         report.append(row);
