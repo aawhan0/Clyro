@@ -2,47 +2,55 @@
 
 > **Know before you apply.**
 
-Clyro helps students verify opportunities by detecting conflicting information across sources and providing evidence-backed insights.
+Clyro is an evidence-backed opportunity verification tool for students. It helps students cross-check internships, hackathons, and events before applying by comparing details across sources and clearly showing what matches, conflicts, or is missing.
 
-## The Problem
+## Why Clyro?
 
-Opportunity details are often scattered across posts, webpages, PDFs, and screenshots. Deadlines, eligibility criteria, and requirements can be missing or contradictory, making it difficult for students to know what to trust.
+Students discover opportunities across student platforms, social posts, and organizer websites. But deadlines, eligibility rules, stipends, locations, and application links can differ between listings. A polished listing alone does not guarantee that every detail is current or consistent.
 
-## The Solution
+Clyro makes those differences visible, so students know what to verify before acting.
 
-Clyro is being built to turn opportunity information into a structured, evidence-backed view. The initial MVP focuses on comparing two sources about the same opportunity to:
+## The MVP
 
-- Extract key details such as deadlines, eligibility, and requirements.
-- Detect conflicting claims and missing information.
-- Show the source evidence behind each finding.
-- Highlight what students should verify before applying.
+The first version focuses on one clear workflow: **compare two sources describing the same opportunity.**
 
-**Core principle:** when sources disagree, Clyro should show the disagreement rather than guess which source is correct.
+- Extract key fields: deadline, eligibility, stipend or prize, location, and application link.
+- Compare the extracted details field by field.
+- Flag conflicts and missing information.
+- Show the evidence and source for each finding.
+- Give students a clear next step when a detail needs verification.
+
+**Clyro does not guess which conflicting claim is correct. It shows the evidence and makes uncertainty explicit.**
 
 ## Example
 
-- **Source A:** Applications close on November 10.
-- **Source B:** Applications close on November 15.
+A student finds an internship listing on a student platform and opens the organizer's application page.
 
-Clyro should flag the deadline as **Needs verification** and show both sources, rather than silently choosing one date.
+| Field | Source A | Source B | Clyro result |
+|---|---|---|---|
+| Deadline | November 10 | November 15 | Conflict detected |
+| Eligibility | Final-year students | Not stated | Missing information |
+| Application link | Listed | Listed | Compare links |
+
+Clyro should display both claims with their source evidence and mark the deadline for verification instead of silently choosing a date.
 
 ## Planned Workflow
 
 ```text
-Opportunity Sources
-       ↓
-AI-Powered Information Extraction
-       ↓
-Structured Data Validation
-       ↓
-Source Comparison
-       ↓
-Evidence-Backed Findings
-       ↓
-Actionable Next Steps
+Two Opportunity Sources
+        ↓
+AI-Assisted Field Extraction
+        ↓
+Structured Validation
+        ↓
+Deterministic Field Comparison
+        ↓
+Evidence-Linked Findings
+        ↓
+Suggested Verification Steps
 ```
 
-AI extraction is intended to identify relevant details; deterministic comparison logic will check for mismatches and missing fields.
+AI helps extract structured details. Validation and comparison logic handle missing fields and mismatches, keeping the final findings inspectable and testable.
 
 ## Planned Technology
 
@@ -54,22 +62,29 @@ AI extraction is intended to identify relevant details; deterministic comparison
 | Data validation | Pydantic |
 | Testing | Pytest |
 
-The specific hosted Gemma model and provider will be confirmed during implementation.
+The specific hosted Gemma model and provider will be selected during implementation.
 
-## Development Status
+## Development Roadmap
 
-**Hackathon MVP in development.** The features and stack above describe the current plan, not necessarily implemented functionality.
-
-- [ ] Set up the frontend and backend
-- [ ] Extract and validate opportunity details
-- [ ] Compare two sources
-- [ ] Display evidence, conflicts, and missing fields
-- [ ] Add tests for matching, conflicting, and incomplete information
+- [ ] Build a simple interface to submit two opportunity sources
+- [ ] Extract and validate the key opportunity fields
+- [ ] Compare deadlines, eligibility, stipends/prizes, location, and application links
+- [ ] Display field-level matches, conflicts, and missing information with source evidence
+- [ ] Add clear loading, error, and verification-needed states
+- [ ] Test matching sources, conflicting fields, missing fields, and extraction failures
 - [ ] Deploy a working demo
+
+## Scope
+
+The MVP prioritizes **internships, hackathons, and student events**. Features such as personalized recommendations, saved opportunities, room listings, marketplace functionality, and continuous monitoring are outside the initial scope.
 
 ## Security
 
 Keep API credentials on the backend in environment variables or a secret manager. Never expose API keys in frontend code or commit real credentials to Git. Add `.env` to `.gitignore` before storing local secrets.
+
+## Project Status
+
+**Hackathon MVP in development.** The features and technology listed here are planned and should not be considered implemented until they are available in the working application.
 
 ## License
 
