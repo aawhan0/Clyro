@@ -836,7 +836,7 @@ textarea:focus {
         <div><div class="eyebrow">Comparison report</div><h2>What needs your attention?</h2><p id="summary"></p></div>
       </div>
       <div class="notice">Clyro reports differences in the supplied text. A conflict is a reason to verify - not proof of fraud or evidence that either source is correct.</div>
-      <div class="result-actions"><button class="primary" type="button" id="saveComparisonBtn">Save comparison</button></div>
+      <div class="result-actions"><button class="primary" type="button" id="saveComparisonBtn">Save comparison</button> <button class="secondary" type="button" id="downloadReportBtn">Download report (.json)</button></div>
       <div class="findings" id="findings"></div>
     </section>
 
@@ -978,6 +978,65 @@ textarea:focus {
       $("results").style.display = "none";
       $("emptyState").style.display = "flex";
     });
+
+
+    function downloadComparisonReport() {
+      if (!Array.isArray(latestFindings) || !latestFindings.length) {
+        $("status").className = "status error";
+        $("status").textContent = "Run a comparison before downloading a report.";
+        return;
+      }
+
+      const report = {
+        product: "Clyro",
+        report_type: "source_comparison",
+        exported_at: new Date().toISOString(),
+        opportunity: $("opportunityName").value.trim() || "Untitled opportunity",
+        sources: [
+          {
+            label: $("sourceAName").value.trim() || "Source A",
+            url: $("sourceAUrl").value.trim() || null,
+            text: $("sourceA").value.trim()
+          },
+          {
+            label: $("sourceBName").value.trim() || "Source B",
+            url: $("sourceBUrl").value.trim() || null,
+            text: $("sourceB").value.trim()
+          }
+        ],
+        findings: latestFindings,
+        checklist: Object.fromEntries(
+          Array.from(document.querySelectorAll(".readiness-item input[type='checkbox']"))
+            .map(input => [input.dataset.field, input.checked])
+        ),
+        limitations: [
+          "Findings describe differences in the supplied text only.",
+          "A match does not prove that either source is current or correct.",
+          "Missing information is not proof of a contradiction.",
+          "Verify critical details with the opportunity organizer."
+        ]
+      };
+
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      const filenameBase = (report.opportunity || "clyro-comparison")
+        .normalize("NFKD")
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+        .toLowerCase()
+        .slice(0, 60) || "clyro-comparison";
+      anchor.href = url;
+      anchor.download = filenameBase + "-report.json";
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      $("status").className = "status";
+      $("status").textContent = "Comparison report downloaded. It includes the supplied source text, findings, checklist, and limitations.";
+    }
+
+    $("downloadReportBtn").addEventListener("click", downloadComparisonReport);
 
     function safeText(value) {
       return value == null ? "Not stated in this source" : String(value);
