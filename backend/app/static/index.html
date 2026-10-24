@@ -83,7 +83,41 @@
       textarea { min-height: 170px; }
       .results-top { align-items: start; flex-direction: column; }
     }
-  </style>
+  /* Clyro readability polish */
+textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 190px;
+    padding: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    font-family: inherit;
+    font-size: 14px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    resize: vertical;
+    tab-size: 2;
+}
+
+textarea::placeholder {
+    line-height: 1.7;
+    opacity: 0.65;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.source-card {
+    padding: 20px;
+}
+
+.source-card textarea {
+    display: block;
+    margin-top: 12px;
+}
+
+</style>
 </head>
 <body>
   <main class="shell">
@@ -260,37 +294,3 @@
   </script>
 </body>
 </html>
-
-/* Clyro readability polish */
-textarea {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 190px;
-    padding: 16px;
-    line-height: 1.7;
-    letter-spacing: 0.01em;
-    font-family: inherit;
-    font-size: 14px;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    resize: vertical;
-    tab-size: 2;
-}
-
-textarea::placeholder {
-    line-height: 1.7;
-    opacity: 0.65;
-}
-
-textarea:focus {
-    outline: none;
-}
-
-.source-card {
-    padding: 20px;
-}
-
-.source-card textarea {
-    display: block;
-    margin-top: 12px;
-}

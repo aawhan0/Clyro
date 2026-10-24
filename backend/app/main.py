@@ -42,9 +42,10 @@ class CompareResponse(StrictModel):
 
 @app.exception_handler(ExtractionProviderError)
 async def handle_provider_error(
-    _request: Request, _exc: ExtractionProviderError
+    _request: Request, exc: ExtractionProviderError
 ) -> JSONResponse:
-    """Return a safe, actionable response when the model provider fails."""
+    """Log provider failures locally while keeping the client response generic."""
+    print(f"Clyro extraction provider error: {exc}", flush=True)
     return JSONResponse(
         status_code=502,
         content={
