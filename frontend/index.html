@@ -631,6 +631,19 @@ textarea:focus {
       .footer-brand-block { grid-column:auto; }
     }
 
+
+    /* Guided second-source discovery */
+    .source-discovery { margin-top:12px; padding:12px; border:1px solid #34392f; border-radius:10px; background:#11130f; }
+    .source-discovery-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .source-discovery-head strong { font-size:12px; }
+    .source-discovery-head button { flex-shrink:0; }
+    .source-discovery p { margin:6px 0 10px; color:var(--muted); font-size:11px; line-height:1.55; }
+    .source-discovery-controls { display:flex; gap:8px; flex-wrap:wrap; }
+    .source-discovery input { width:100%; min-width:0; padding:10px 11px; border:1px solid var(--border); border-radius:8px; background:#191c18; color:var(--text); font:inherit; font-size:12px; }
+    .source-discovery .secondary { padding:8px 11px; font-size:11px; }
+    .source-discovery .primary { padding:8px 11px; font-size:11px; }
+    .source-discovery-note { margin-top:9px !important; margin-bottom:0 !important; }
+
   </style>
 </head>
 <body>
@@ -695,6 +708,22 @@ textarea:focus {
           </div>
           <textarea id="sourceB" maxlength="30000" aria-label="Details you are checking against" placeholder="Paste the website or second announcement here..."></textarea>
           <p class="input-helper">A second version to compare against. It doesn't have to be official.</p>
+          <div class="source-discovery" aria-label="Find a second source">
+            <div class="source-discovery-head">
+              <strong>Not sure where to find the second source?</strong>
+              <button class="secondary" type="button" id="guideSourceBtn">Help me find it</button>
+            </div>
+            <div id="sourceGuidePanel" hidden>
+              <p>Use the first announcement to build a search. Look for the same role and organizer, open a relevant result, then copy its details into the box above.</p>
+              <label class="hint" for="sourceSearchQuery">Suggested search (you can edit this)</label>
+              <input id="sourceSearchQuery" type="text" autocomplete="off" placeholder="Opportunity name + organizer + official application">
+              <div class="source-discovery-controls" style="margin-top:9px">
+                <button class="primary" type="button" id="searchSourceBtn">Search the web ↗</button>
+                <button class="secondary" type="button" id="refreshSourceQueryBtn">Refresh suggestion</button>
+              </div>
+              <p class="source-discovery-note">Check that the result is for the same opportunity and current cycle. Search results aren't proof that a page is official. Clyro doesn't fetch pages automatically yet—copy the relevant text and paste it into this source box.</p>
+            </div>
+          </div>
         </article>
       </div>
       <div class="actions">
@@ -982,6 +1011,49 @@ textarea:focus {
       $("emptyState").style.display = "none";
       $("results").scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
+    function suggestedSourceQuery() {
+      const source = $("sourceA").value.trim();
+      if (!source) return "";
+      const cleaned = source
+        .replace(/https?:\/\/\S+/gi, " ")
+        .replace(/www\.\S+/gi, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const excerpt = cleaned.split(" ").slice(0, 22).join(" ");
+      return (excerpt + " official application eligibility deadline").slice(0, 320).trim();
+    }
+
+    function refreshSourceQuery() {
+      const query = suggestedSourceQuery();
+      $("sourceSearchQuery").value = query;
+      if (!query) {
+        $("status").className = "status error";
+        $("status").textContent = "Paste the first announcement before generating a search.";
+        return false;
+      }
+      $("status").className = "status";
+      $("status").textContent = "Search suggestion ready. Review it, then open the web search.";
+      return true;
+    }
+
+    $("guideSourceBtn").addEventListener("click", () => {
+      const panel = $("sourceGuidePanel");
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) refreshSourceQuery();
+    });
+
+    $("refreshSourceQueryBtn").addEventListener("click", refreshSourceQuery);
+
+    $("searchSourceBtn").addEventListener("click", () => {
+      const query = $("sourceSearchQuery").value.trim();
+      if (!query) {
+        $("status").className = "status error";
+        $("status").textContent = "Add a search query first.";
+        return;
+      }
+      window.open("https://www.google.com/search?q=" + encodeURIComponent(query), "_blank", "noopener,noreferrer");
+    });
 
     $("compareBtn").addEventListener("click", async () => {
       const source_a = $("sourceA").value.trim();
