@@ -49,6 +49,8 @@
     .readiness-item { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--text); }
     .readiness-item input { margin-top:4px; accent-color:var(--lime); }
     .insight { margin:12px 0 0; padding:10px 12px; border-left:2px solid var(--yellow); border-radius:0 8px 8px 0; background:#191a14; color:#d3d0bf; font-size:12px; line-height:1.6; }
+    .decision-note { margin:0 0 12px; padding:13px 15px; border:1px solid #66552c; border-radius:10px; background:#211f16; color:#e8dfbd; font-size:12px; line-height:1.6; }
+    .decision-note strong { display:block; margin-bottom:3px; color:var(--yellow); font-size:12px; }
     .card { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 20px; min-width: 0; }
     .card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
     h2, h3 { margin: 0; }
@@ -829,12 +831,16 @@ textarea:focus {
       application_method: "Application method"
     };
     const demoA = "Applications close on November 10, 2026. Open to undergraduate students. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
-    const demoB = "Applications close on November 15, 2026. Open to undergraduate students in computer science or data science. Stipend: INR 15,000 per month. Remote participation. Apply through the official application form.";
+    const demoB = "Applications close on November 15, 2026. Open to undergraduate students in computer science or data science. Stipend: INR 15,000 per month.";
 
     $("demoBtn").addEventListener("click", () => {
       $("sourceA").value = demoA;
       $("sourceB").value = demoB;
-      $("status").textContent = "Illustrative demo text loaded. Run Compare to analyze it.";
+      $("sourceAName").value = "Illustrative sample · Source A";
+      $("sourceBName").value = "Illustrative sample · Source B";
+      $("sourceAUrl").value = "";
+      $("sourceBUrl").value = "";
+      $("status").textContent = "Fictional example loaded: deadline conflict, eligibility difference, and details missing from Source B. Run Compare to see what needs verification.";
       $("results").style.display = "none";
       $("emptyState").style.display = "flex";
     });
@@ -929,6 +935,29 @@ textarea:focus {
       countLine.className = "table-summary";
       countLine.textContent = attentionItems.length ? `${attentionItems.length} detail${attentionItems.length === 1 ? "" : "s"} to verify · ${counts.match} of ${findings.length} fields match` : `All ${findings.length} compared fields match`;
       $("findings").append(countLine);
+
+      // Explain the practical implication without claiming either source is authoritative.
+      const decisionNote = document.createElement("aside");
+      decisionNote.className = "decision-note";
+      const decisionTitle = document.createElement("strong");
+      decisionTitle.textContent = "Why this matters";
+      const hasConflict = counts.conflict > 0;
+      const hasScopeDifference = counts.partial_mismatch > 0;
+      const hasMissing = counts.not_found > 0;
+      let decisionCopy;
+      if (hasConflict) {
+        decisionCopy = "At least one detail differs between the supplied sources. Relying on the wrong deadline or application detail could affect your next step. Verify the conflicting field with the organizer before acting.";
+      } else if (hasScopeDifference) {
+        decisionCopy = "The sources describe at least one requirement differently. Check the exact conditions before deciding whether the opportunity fits you.";
+      } else if (hasMissing) {
+        decisionCopy = "Some details are not stated clearly in both sources. Missing information is unresolved—not proof of a conflict—so check the original opportunity page before relying on an assumption.";
+      } else {
+        decisionCopy = "No differences were detected in the fields compared. That does not prove either source is current or correct; verify critical details before applying.";
+      }
+      const decisionText = document.createElement("span");
+      decisionText.textContent = decisionCopy;
+      decisionNote.append(decisionTitle, decisionText);
+      $("findings").append(decisionNote);
 
       const report = document.createElement("article");
       report.className = "comparison-card";
