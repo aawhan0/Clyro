@@ -538,6 +538,30 @@ textarea:focus {
       #results { margin-top:22px; padding-top:20px; }
     }
 
+
+    /* Editorial value section: one clear story, not another stack of cards. */
+    .value-section {
+      margin-top: 34px; padding: 28px 0 20px; border: 0; border-top: 1px solid var(--border);
+      border-radius: 0; background: transparent;
+    }
+    .value-story { display:grid; grid-template-columns:1.05fr 1fr; gap:48px; align-items:center; }
+    .value-story-main h2 { margin:10px 0 0; font-size:clamp(24px,3vw,34px); line-height:1.16; letter-spacing:-1px; }
+    .value-story-main h2 span { color:var(--lime); }
+    .value-story-copy { max-width:510px; color:var(--muted); font-size:14px; line-height:1.75; }
+    .value-story-copy p { margin:0 0 9px; }
+    .value-story-copy p:first-child { color:var(--text); font-weight:650; font-size:15px; }
+    .value-proofline { display:flex; flex-wrap:wrap; gap:12px 28px; margin-top:24px; padding:15px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .value-proofline span { color:#c8cdbf; font-size:12px; }
+    .value-proofline b { color:var(--lime); margin-right:7px; font-size:10px; letter-spacing:.5px; }
+    .builder-note { margin:15px 0 0; color:var(--muted); font-size:12px; }
+    .builder-note a { color:var(--lime); text-decoration:underline; text-decoration-color:#64733e; text-underline-offset:3px; }
+    @media(max-width:760px) {
+      .value-section { margin-top:28px; padding-top:22px; }
+      .value-story { grid-template-columns:1fr; gap:14px; }
+      .value-story-main h2 { font-size:26px; }
+      .value-proofline { gap:10px 18px; }
+    }
+
   </style>
 </head>
 <body>
@@ -606,30 +630,22 @@ textarea:focus {
     </section>
 
     <section class="value-section" aria-labelledby="valueTitle">
-      <div class="value-heading">
-        <div>
-          <div class="eyebrow">Why Clyro</div>
-          <h2 id="valueTitle">Not another AI summary.</h2>
+      <div class="value-story">
+        <div class="value-story-main">
+          <div class="eyebrow">Why Clyro exists</div>
+          <h2 id="valueTitle">A summary tells you what it says.<br><span>Clyro shows you what changed.</span></h2>
         </div>
-        <p>Built for one specific job: checking whether two announcements agree on the details that affect your application.</p>
+        <div class="value-story-copy">
+          <p>One opportunity. Two announcements. Five details that can change your decision.</p>
+          <p>Instead of asking a chatbot to summarise both and hoping you notice the difference, Clyro lines up the same fields, flags mismatches, and lets you inspect the text behind each one.</p>
+        </div>
       </div>
-      <div class="value-grid">
-        <article class="value-item">
-          <span class="value-number">01 / STRUCTURED</span>
-          <strong>Compare the same fields</strong>
-          <p>Deadlines, eligibility, stipend, location and application method—side by side, every time.</p>
-        </article>
-        <article class="value-item">
-          <span class="value-number">02 / EVIDENCE-LED</span>
-          <strong>See what triggered a flag</strong>
-          <p>Inspect quoted text from each announcement instead of relying on a summary alone.</p>
-        </article>
-        <article class="value-item">
-          <span class="value-number">03 / CLEAR LIMITS</span>
-          <strong>Know what it can’t tell you</strong>
-          <p>Clyro flags differences to verify. It doesn’t rank sources, decide which is correct, or label a post fraudulent.</p>
-        </article>
+      <div class="value-proofline">
+        <span><b>01</b> Same fields, side by side</span>
+        <span><b>02</b> Evidence you can inspect</span>
+        <span><b>03</b> No made-up “trust score”</span>
       </div>
+      <p class="builder-note">Built by the maker of <a href="https://www.dasaiko.dev/" target="_blank" rel="noopener noreferrer">Dasaiko</a> — another project built around keeping AI answers connected to their sources.</p>
     </section>
 
     <section id="results" aria-live="polite">
