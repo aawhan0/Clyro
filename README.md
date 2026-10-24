@@ -66,13 +66,13 @@ AI assists with extracting information from source text. Structured validation a
 
 | Component | Planned choice |
 |---|---|
-| Frontend | React, Vite, Tailwind CSS |
+| Frontend | Plain HTML, CSS, and JavaScript |
 | Backend | Python, FastAPI |
 | AI-assisted extraction | Hosted Gemma API |
 | Structured validation | Pydantic |
 | Tests | Pytest |
 
-These are planned choices, not a claim that the stack or features are already implemented.
+FastAPI exposes the backend workflow at `POST /api/compare` and `GET /health`. The plain HTML/CSS/JavaScript interface lives in `frontend/index.html` and is served by FastAPI. Pasted source text is supported; URL fetching is outside the current MVP.
 
 ## Build order
 
@@ -103,9 +103,58 @@ Clyro is designed to complement student opportunity platforms, not replace them.
 - Do not expose API keys in frontend code or commit secrets.
 - Label fictional demo data clearly.
 
+## Run the backend
+
+From the repository root, install the backend dependencies and start the API:
+
+```bash
+python -m venv .venv
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r backend/requirements.txt
+```
+
+Set `GEMMA_API_KEY` in your backend environment, then run:
+
+```bash
+cd backend
+python -m uvicorn app.main:app --reload
+```
+
+- Health check: `GET http://127.0.0.1:8000/health`
+- Compare two sources: `POST http://127.0.0.1:8000/api/compare`
+- Interactive API docs: `http://127.0.0.1:8000/docs`
+
+Example request body:
+
+```json
+{
+  "source_a": "Applications close November 10, 2026. Open to undergraduate students.",
+  "source_b": "Applications close November 15, 2026. Open to undergraduate students."
+}
+```
+
+Run backend tests from the backend directory:
+
+```bash
+PYTHONPATH=. python -m pytest -q
+```
+
+## Deployment
+
+A Render Blueprint is provided in `render.yaml`. To deploy:
+
+1. Push this branch to GitHub.
+2. In Render, create a new **Blueprint** and select this repository and the `feat/opportunity-source-schema` branch.
+3. Set `GEMMA_API_KEY` when prompted. Keep it private; never add it to the repository or frontend.
+4. Deploy and wait for the `/health` check to pass.
+5. Open the generated service URL and test a comparison with the demo example.
+
+The service uses `backend/requirements.txt` and starts FastAPI from the `backend` directory. Render's free service may sleep when idle, so the first request after inactivity can be slow. The app also depends on the configured Gemma API being available.
+
 ## Project status
 
-**Early-stage hackathon MVP.** The workflow above describes the intended behavior. Features should be treated as planned until implemented and tested.
+**Early-stage hackathon MVP.** The frontend and backend are served by one FastAPI service. A working end-to-end comparison requires a valid `GEMMA_API_KEY`. URL fetching is outside the current scope.
 
 ## License
 
