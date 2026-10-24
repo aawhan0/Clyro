@@ -13,15 +13,16 @@ from urllib.request import Request, urlopen
 
 from pydantic import ValidationError
 
+from pathlib import Path
 from dotenv import load_dotenv
 
 from app.evidence import EvidenceValidationError, validate_source_evidence
 from app.schemas import OpportunitySource
 
-load_dotenv()
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+load_dotenv(BACKEND_DIR / ".env")
 
-
-DEFAULT_MODEL = "gemma-3-27b-it"
+DEFAULT_MODEL = "gemma-4-26b-a4b-it"
 MAX_SOURCE_CHARACTERS = 30_000
 
 
