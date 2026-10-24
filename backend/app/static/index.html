@@ -470,6 +470,24 @@ textarea:focus {
       #results { margin-top: 26px; }
     }
 
+  
+    /* Value proposition: explain the workflow without adding visual clutter. */
+    .value-section { margin: 28px 0 0; padding: 22px 0 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .value-heading { display:flex; align-items:end; justify-content:space-between; gap:20px; margin-bottom:16px; }
+    .value-heading h2 { margin:5px 0 0; font-size:21px; letter-spacing:-.5px; }
+    .value-heading p { margin:0; max-width:390px; color:var(--muted); font-size:12px; }
+    .value-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .value-item { padding:15px 16px; border:1px solid var(--border); border-radius:11px; background:#151713; }
+    .value-item strong { display:block; margin-bottom:5px; font-size:13px; }
+    .value-item p { margin:0; color:var(--muted); font-size:12px; line-height:1.6; }
+    .value-number { display:block; margin-bottom:9px; color:var(--lime); font-size:10px; font-weight:800; letter-spacing:1px; }
+    @media(max-width:760px) {
+      .value-section { margin-top:24px; padding:20px 0; }
+      .value-heading { align-items:flex-start; flex-direction:column; gap:7px; }
+      .value-grid { grid-template-columns:1fr; gap:9px; }
+      .value-item { padding:13px 14px; }
+    }
+
   </style>
 </head>
 <body>
@@ -534,6 +552,33 @@ textarea:focus {
       </div>
       <div class="empty-state-fields" aria-label="Compared fields">
         <span>Deadline</span><span>Eligibility</span><span>Stipend</span><span>Location</span><span>Application method</span>
+      </div>
+    </section>
+
+    <section class="value-section" aria-labelledby="valueTitle">
+      <div class="value-heading">
+        <div>
+          <div class="eyebrow">Why Clyro</div>
+          <h2 id="valueTitle">Not another AI summary.</h2>
+        </div>
+        <p>Built for one specific job: checking whether two announcements agree on the details that affect your application.</p>
+      </div>
+      <div class="value-grid">
+        <article class="value-item">
+          <span class="value-number">01 / STRUCTURED</span>
+          <strong>Compare the same fields</strong>
+          <p>Deadlines, eligibility, stipend, location and application method—side by side, every time.</p>
+        </article>
+        <article class="value-item">
+          <span class="value-number">02 / EVIDENCE-LED</span>
+          <strong>See what triggered a flag</strong>
+          <p>Inspect quoted text from each announcement instead of relying on a summary alone.</p>
+        </article>
+        <article class="value-item">
+          <span class="value-number">03 / CLEAR LIMITS</span>
+          <strong>Know what it can’t tell you</strong>
+          <p>Clyro flags differences to verify. It doesn’t rank sources, decide which is correct, or label a post fraudulent.</p>
+        </article>
       </div>
     </section>
 
